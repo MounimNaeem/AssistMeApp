@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "370403399118",
+    "project_id": "assistme-d39e0",
+    "storage_bucket": "assistme-d39e0.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:370403399118:android:529eff7597b101cabec79f",
+        "android_client_info": {
+          "package_name": "com.example.assist_me_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC1La1dbpM8kBmLfXqI16aW8YJnSFa-mVc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
