@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import '../models/calendar_event_model.dart';
 import '../services/calendar_service.dart';
+import '../../../services/home_widget_service.dart';
 
 class CalendarProvider extends ChangeNotifier {
   final CalendarService _service = CalendarService();
@@ -63,6 +64,7 @@ class CalendarProvider extends ChangeNotifier {
         isLoading = false;
         errorMessage = null;
         notifyListeners();
+        HomeWidgetService.updateTodayEvents(eventsList);
       },
       onError: (e) {
         errorMessage = e.toString();

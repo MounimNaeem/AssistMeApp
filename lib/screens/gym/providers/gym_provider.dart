@@ -7,6 +7,7 @@ import '../models/gym_workout_model.dart';
 import '../models/workout_exercise_model.dart';
 import '../models/exercise_set_model.dart';
 import '../services/gym_service.dart';
+import '../../../services/home_widget_service.dart';
 
 final gymProvider = ChangeNotifierProvider((ref) => GymProvider());
 
@@ -53,6 +54,9 @@ class GymProvider extends ChangeNotifier {
       (workouts) {
         workoutHistory = workouts;
         notifyListeners();
+
+        // Update widget with gym streak data
+        _updateWidget();
       },
       onError: (e) {
         errorMessage = e.toString();
@@ -221,6 +225,76 @@ class GymProvider extends ChangeNotifier {
     } catch (_) {
       return null;
     }
+  }
+
+  // ==================== STREAK TRACKING ====================
+
+  /// Calculate the current gym streak (consecutive days with logged workouts)
+  int calculateGymStreak() {
+    if (completedWorkouts.isEmpty) return 0;
+
+    // Sort workouts by date (most recent first)
+    final sortedWorkouts = List<GymWorkoutModel>.from(completedWorkouts)
+      ..sort((a, b) => b.date.compareTo(a.date));
+
+    // Get unique dates (YYYY-MM-DD format) when workouts were logged
+    final workoutDates = <String>{};
+    for (var workout in sortedWorkouts) {
+      final dateKey = '${workout.date.year}-${workout.date.month.toString().padLeft(2, '0')}-${workout.date.day.toString().padLeft(2, '0')}';
+      workoutDates.add(dateKey);
+    }
+
+    // Sort dates in descending order
+    final sortedDates = workoutDates.toList()..sort((a, b) => b.compareTo(a));
+
+    final now = DateTime.now();
+    final today = '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
+    final yesterday = DateTime(now.year, now.month, now.day - 1);
+    final yesterdayStr = '${yesterday.year}-${yesterday.month.toString().padLeft(2, '0')}-${yesterday.day.toString().padLeft(2, '0')}';
+
+    // If no workout today or yesterday, streak is broken
+    if (sortedDates.isEmpty || (sortedDates.first != today && sortedDates.first != yesterdayStr)) {
+      return 0;
+    }
+
+    // Count consecutive days
+    int streak = 0;
+    DateTime expectedDate = now;
+
+    for (var dateStr in sortedDates) {
+      final expectedDateStr = '${expectedDate.year}-${expectedDate.month.toString().padLeft(2, '0')}-${expectedDate.day.toString().padLeft(2, '0')}';
+
+      if (dateStr == expectedDateStr) {
+        streak++;
+        expectedDate = DateTime(expectedDate.year, expectedDate.month, expectedDate.day - 1);
+      } else {
+        break;
+      }
+    }
+
+    return streak;
+  }
+
+  /// Check if user has logged a workout today
+  bool hasLoggedWorkoutToday() {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final tomorrow = DateTime(now.year, now.month, now.day + 1);
+
+    return completedWorkouts.any((workout) =>
+        workout.date.isAfter(today.subtract(const Duration(seconds: 1))) &&
+        workout.date.isBefore(tomorrow));
+  }
+
+  /// Updates the daily fitness widget with gym streak data
+  void _updateWidget() {
+    final streak = calculateGymStreak();
+    final hasLogged = hasLoggedWorkoutToday();
+
+    HomeWidgetService.updateGymData(
+      gymStreak: streak,
+      hasLoggedToday: hasLogged,
+    );
   }
 
   @override

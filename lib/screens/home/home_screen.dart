@@ -43,6 +43,92 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     return NumberFormat('#,###').format(calories);
   }
 
+  Widget _buildWeightReminderBanner() {
+    final metricsState = ref.watch(healthMetricsProvider);
+    final countdown = metricsState.getWeightLoggingCountdown();
+    final shouldLogToday = metricsState.shouldLogWeightToday();
+
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 20.w),
+      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: shouldLogToday
+              ? [Colors.orange.shade400, Colors.orange.shade600]
+              : [Colors.blue.shade400, Colors.blue.shade600],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(16.r),
+        boxShadow: [
+          BoxShadow(
+            color: (shouldLogToday ? Colors.orange : Colors.blue).withValues(
+              alpha: 0.3,
+            ),
+            blurRadius: 8,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          Container(
+            padding: EdgeInsets.all(10.w),
+            decoration: BoxDecoration(
+              color: Colors.white.withValues(alpha: 0.2),
+              borderRadius: BorderRadius.circular(12.r),
+            ),
+            child: Icon(
+              shouldLogToday ? Icons.scale_rounded : Icons.schedule_rounded,
+              color: Colors.white,
+              size: 24.w,
+            ),
+          ),
+          SizedBox(width: 12.w),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  shouldLogToday ? 'Weight Logging Due' : 'Weight Reminder',
+                  style: AppTextStyles.bodyText.copyWith(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 13.sp,
+                  ),
+                ),
+                SizedBox(height: 2.h),
+                Text(
+                  countdown,
+                  style: AppTextStyles.caption.copyWith(
+                    color: Colors.white.withValues(alpha: 0.9),
+                    fontSize: 11.sp,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          if (shouldLogToday)
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(20.r),
+              ),
+              child: Text(
+                'Log Now',
+                style: AppTextStyles.caption.copyWith(
+                  color: Colors.orange.shade700,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 11.sp,
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildDashboardStats(int avgCalories) {
     final metricsState = ref.watch(healthMetricsProvider);
     final latest = metricsState.latestMetrics;
@@ -67,7 +153,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       },
       {
         'label': 'Cal Goal',
-        'value': calorieGoal != null ? '${_formatCalories(calorieGoal)} kcal' : '--',
+        'value': calorieGoal != null
+            ? '${_formatCalories(calorieGoal)} kcal'
+            : '--',
         'icon': Icons.track_changes_rounded,
         'color': AppColors.foodColor,
       },
@@ -119,6 +207,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         itemBuilder: (context, index) {
           final stat = stats[index];
           final isAvgCalories = index == 0;
+
           return Container(
             width: 100.w,
             margin: EdgeInsets.only(right: 16.w),
@@ -257,6 +346,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildDashboardStats(avgCalories),
+            SizedBox(height: 5.h),
+            _buildWeightReminderBanner(),
+            SizedBox(height: 5.h),
             Padding(
               padding: EdgeInsets.fromLTRB(24.w, 0, 24.w, 24.w),
               child: Column(
@@ -321,8 +413,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         icon: Icons.monitor_heart_rounded,
                         color: AppColors.healthMetricsColor,
                         subtitle: 'Body Stats',
-                        onTap: () =>
-                            Navigator.pushNamed(context, AppRouter.healthMetrics),
+                        onTap: () => Navigator.pushNamed(
+                          context,
+                          AppRouter.healthMetrics,
+                        ),
                       ),
                       FeatureCard(
                         title: 'Notifications',

@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 import '../models/food_log_model.dart';
 import '../services/food_service.dart';
+import '../../../services/home_widget_service.dart';
 
 final foodProvider = ChangeNotifierProvider((ref) => FoodProvider());
 
@@ -35,6 +37,9 @@ class FoodProvider extends ChangeNotifier {
         isLoading = false;
         errorMessage = null;
         notifyListeners();
+
+        // Update widget with today's calories
+        _updateWidget();
       },
       onError: (e) {
         errorMessage = e.toString();
@@ -132,6 +137,15 @@ class FoodProvider extends ChangeNotifier {
       'carbs': (totalCarbs / dayCount).round(),
       'fat': (totalFat / dayCount).round(),
     };
+  }
+
+  /// Updates the daily fitness widget with today's calories
+  void _updateWidget() {
+    final now = DateTime.now();
+    final today = DateFormat('yyyy-MM-dd').format(now);
+    final totalCalories = getTotalCaloriesForDate(today);
+
+    HomeWidgetService.updateCalories(totalCalories);
   }
 
   @override

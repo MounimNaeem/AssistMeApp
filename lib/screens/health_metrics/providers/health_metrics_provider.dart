@@ -109,6 +109,76 @@ class HealthMetricsProvider extends ChangeNotifier {
     }
   }
 
+  // ==================== WEIGHT LOGGING COUNTDOWN ====================
+
+  /// Get the most recent entry where weight was logged
+  HealthMetricsModel? get lastWeightEntry {
+    if (allMetrics.isEmpty) return null;
+
+    // Find the most recent entry that has a weight value
+    for (var metric in allMetrics) {
+      if (metric.weight != null) {
+        return metric;
+      }
+    }
+    return null;
+  }
+
+  /// Calculate the weight logging countdown message
+  /// Returns a message like "Next log in 3 days", "Log weight today", etc.
+  String getWeightLoggingCountdown() {
+    final lastEntry = lastWeightEntry;
+
+    if (lastEntry == null) {
+      return 'Log weight today';
+    }
+
+    // Parse the last weight log date
+    final lastLogParts = lastEntry.date.split('-');
+    final lastLogDate = DateTime(
+      int.parse(lastLogParts[0]),
+      int.parse(lastLogParts[1]),
+      int.parse(lastLogParts[2]),
+    );
+
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+
+    // Calculate days since last log
+    final daysSinceLastLog = today.difference(lastLogDate).inDays;
+
+    // 3-day cycle countdown
+    if (daysSinceLastLog >= 3) {
+      return 'Log weight today';
+    } else if (daysSinceLastLog == 2) {
+      return 'Next log in 1 day';
+    } else if (daysSinceLastLog == 1) {
+      return 'Next log in 2 days';
+    } else {
+      // daysSinceLastLog == 0 (logged today)
+      return 'Next log in 3 days';
+    }
+  }
+
+  /// Check if user should log weight today (3 or more days since last log)
+  bool shouldLogWeightToday() {
+    final lastEntry = lastWeightEntry;
+
+    if (lastEntry == null) return true;
+
+    final lastLogParts = lastEntry.date.split('-');
+    final lastLogDate = DateTime(
+      int.parse(lastLogParts[0]),
+      int.parse(lastLogParts[1]),
+      int.parse(lastLogParts[2]),
+    );
+
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+
+    return today.difference(lastLogDate).inDays >= 3;
+  }
+
   @override
   void dispose() {
     stopListening();

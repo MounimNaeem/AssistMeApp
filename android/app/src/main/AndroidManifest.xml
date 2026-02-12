@@ -35,6 +35,40 @@
             android:name="com.google.firebase.messaging.default_notification_channel_id"
             android:value="high_importance_channel" />
 
+        <!-- Today's Events Widget -->
+        <receiver
+            android:name=".TodayEventsWidget"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="com.example.assist_me_app.ACTION_PREV_DAY" />
+                <action android:name="com.example.assist_me_app.ACTION_NEXT_DAY" />
+                <action android:name="com.example.assist_me_app.ACTION_TODAY" />
+                <action android:name="com.example.assist_me_app.ACTION_ITEM_CLICK" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/today_events_widget_info" />
+        </receiver>
+
+        <!-- Widget List Service -->
+        <service
+            android:name=".EventsWidgetService"
+            android:permission="android.permission.BIND_REMOTEVIEWS"
+            android:exported="false" />
+
+        <!-- Daily Fitness Widget -->
+        <receiver
+            android:name=".DailyFitnessWidget"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/daily_fitness_widget_info" />
+        </receiver>
+
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
         <meta-data

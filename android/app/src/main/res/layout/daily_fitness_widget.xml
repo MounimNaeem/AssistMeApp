@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="8dp">
+
+    <LinearLayout
+        android:id="@+id/widget_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@drawable/widget_background"
+        android:padding="16dp">
+
+        <!-- Widget Title -->
+        <TextView
+            android:id="@+id/widget_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Daily Fitness"
+            android:textSize="16sp"
+            android:textColor="#212121"
+            android:textStyle="bold"
+            android:layout_gravity="start"
+            android:layout_marginBottom="12dp" />
+
+        <!-- Calories Section -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="8dp">
+
+            <TextView
+                android:id="@+id/calories_label"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Calories:"
+                android:textSize="14sp"
+                android:textColor="#616161" />
+
+            <TextView
+                android:id="@+id/calories_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0 kcal"
+                android:textSize="14sp"
+                android:textColor="#212121"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <!-- Gym Streak Section -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="8dp">
+
+            <TextView
+                android:id="@+id/streak_label"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Streak:"
+                android:textSize="14sp"
+                android:textColor="#616161" />
+
+            <TextView
+                android:id="@+id/streak_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0 days 🔥"
+                android:textSize="14sp"
+                android:textColor="#212121"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <!-- Divider -->
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="8dp"
+            android:background="#E0E0E0"
+            android:contentDescription="divider" />
+
+        <!-- Reminder Text (shown only when not logged today) -->
+        <TextView
+            android:id="@+id/reminder_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="⚠️ Log gym session!"
+            android:textSize="13sp"
+            android:textColor="#F57C00"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:padding="8dp"
+            android:visibility="visible" />
+
+    </LinearLayout>
+
+</FrameLayout>

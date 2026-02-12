@@ -9,6 +9,7 @@ import '../../screens/notification_settings/notification_settings_screen.dart';
 import '../../screens/settings/settings_screen.dart';
 import '../../screens/settings/update_password_screen.dart';
 import '../../screens/calendar/calendar_screen.dart';
+import '../../screens/basketball/basketball_screen.dart';
 
 class AppRouter {
   static const String login = '/';
@@ -54,9 +55,11 @@ class AppRouter {
       case calendar:
         return MaterialPageRoute(builder: (_) => const CalendarScreen());
 
+      case basketball:
+        return MaterialPageRoute(builder: (_) => const BasketballScreen());
+
       // Placeholders
       case study:
-      case basketball:
       case assistant:
         return MaterialPageRoute(
           builder: (_) => Scaffold(
