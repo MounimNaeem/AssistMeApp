@@ -27,6 +27,7 @@ class _WorkoutExecutionScreenState
   late GymWorkoutModel _workout;
   final _notesController = TextEditingController();
   final _nameController = TextEditingController();
+  GymWorkoutModel? _previousWorkout;
 
   @override
   void initState() {
@@ -37,6 +38,9 @@ class _WorkoutExecutionScreenState
         : widget.workout.copyWith(startTime: widget.workout.startTime);
     _notesController.text = _workout.notes;
     _nameController.text = _workout.routineName;
+
+    // Fetch previous completed workout for this routine to show hints
+    _previousWorkout = ref.read(gymProvider).getLastCompletedWorkoutForRoutine(_workout.routineId);
   }
 
   @override
@@ -153,6 +157,33 @@ class _WorkoutExecutionScreenState
     newExercises[index] = updatedEx;
     setState(() => _workout = _workout.copyWith(exercises: newExercises));
     _autoSave();
+  }
+
+  /// Get the previous weight hint for a specific exercise and set number
+  String? _getPreviousWeightHint(String exerciseName, int setNumber) {
+    if (_previousWorkout == null) return null;
+
+    try {
+      // Find the matching exercise in the previous workout
+      final previousExercise = _previousWorkout!.exercises.firstWhere(
+        (ex) => ex.exerciseName == exerciseName,
+      );
+
+      // Find the matching set (setNumber is 1-indexed)
+      if (setNumber <= previousExercise.sets.length) {
+        final previousSet = previousExercise.sets[setNumber - 1];
+        final weight = previousSet.weight;
+
+        // Return the weight as a string (remove decimal if it's a whole number)
+        if (weight > 0) {
+          return weight % 1 == 0 ? weight.toInt().toString() : weight.toString();
+        }
+      }
+    } catch (_) {
+      // Exercise or set not found in previous workout
+    }
+
+    return null;
   }
 
   @override
@@ -526,7 +557,7 @@ class _WorkoutExecutionScreenState
                   ? (set.weight % 1 == 0
                         ? '${set.weight.toInt()}'
                         : '${set.weight}')
-                  : '0',
+                  : '',
               (v) {
                 final val = double.tryParse(v) ?? 0;
                 final newSets = List<ExerciseSetModel>.from(ex.sets);
@@ -536,6 +567,7 @@ class _WorkoutExecutionScreenState
               keyboardType: const TextInputType.numberWithOptions(
                 decimal: true,
               ),
+              hint: _getPreviousWeightHint(ex.exerciseName, set.setNumber),
             ),
           ),
           SizedBox(width: 8.w),
@@ -581,11 +613,13 @@ class _WorkoutExecutionScreenState
     String text,
     Function(String) onChanged, {
     TextInputType keyboardType = TextInputType.text,
+    String? hint,
   }) {
     return _InputBox(
       text: text,
       onChanged: onChanged,
       keyboardType: keyboardType,
+      hint: hint,
     );
   }
 }
@@ -594,11 +628,13 @@ class _InputBox extends StatefulWidget {
   final String text;
   final Function(String) onChanged;
   final TextInputType keyboardType;
+  final String? hint;
 
   const _InputBox({
     required this.text,
     required this.onChanged,
     required this.keyboardType,
+    this.hint,
   });
 
   @override
@@ -646,9 +682,14 @@ class _InputBoxState extends State<_InputBox> {
           controller: _controller,
           textAlign: TextAlign.center,
           keyboardType: widget.keyboardType,
-          decoration: const InputDecoration(
+          decoration: InputDecoration(
             border: InputBorder.none,
             contentPadding: EdgeInsets.zero,
+            hintText: widget.hint,
+            hintStyle: AppTextStyles.bodyText.copyWith(
+              fontSize: 14.sp,
+              color: AppColors.grey.withValues(alpha: 0.5),
+            ),
           ),
           style: AppTextStyles.bodyText.copyWith(fontSize: 14.sp),
           onChanged: widget.onChanged,

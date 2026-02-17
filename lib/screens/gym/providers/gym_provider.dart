@@ -227,6 +227,22 @@ class GymProvider extends ChangeNotifier {
     }
   }
 
+  /// Get the last completed workout for a specific routine
+  GymWorkoutModel? getLastCompletedWorkoutForRoutine(String routineId) {
+    try {
+      final completedWorkoutsForRoutine = workoutHistory
+          .where((w) => w.routineId == routineId && w.isCompleted)
+          .toList()
+        ..sort((a, b) => b.completedAt!.compareTo(a.completedAt!));
+
+      return completedWorkoutsForRoutine.isNotEmpty
+          ? completedWorkoutsForRoutine.first
+          : null;
+    } catch (_) {
+      return null;
+    }
+  }
+
   // ==================== STREAK TRACKING ====================
 
   /// Calculate the current gym streak (consecutive days with logged workouts)

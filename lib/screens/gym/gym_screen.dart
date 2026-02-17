@@ -68,10 +68,7 @@ class _GymScreenState extends ConsumerState<GymScreen> {
       ),
       body: IndexedStack(
         index: _currentIndex,
-        children: const [
-          LogListScreen(),
-          RoutinesListScreen(),
-        ],
+        children: const [LogListScreen(), RoutinesListScreen()],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _onFabPressed,
@@ -124,7 +121,9 @@ class _GymScreenState extends ConsumerState<GymScreen> {
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 8.h),
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.gymColor.withValues(alpha: 0.1) : Colors.transparent,
+          color: isSelected
+              ? AppColors.gymColor.withValues(alpha: 0.1)
+              : Colors.transparent,
           borderRadius: BorderRadius.circular(12.r),
         ),
         child: Column(

@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="widget_description">Shows today\'s calendar events</string>
+    <string name="today_events_widget_name">Today\'s Events</string>
+    <string name="today_events_widget_description">Shows today\'s calendar events</string>
+    <string name="daily_fitness_widget_name">Daily Fitness</string>
     <string name="daily_fitness_widget_description">View today\'s calories and gym streak at a glance</string>
 </resources>
