@@ -63,6 +63,6 @@ class DefaultFirebaseOptions {
     messagingSenderId: '370403399118',
     projectId: 'assistme-d39e0',
     storageBucket: 'assistme-d39e0.firebasestorage.app',
-    iosBundleId: 'com.example.assistMeApp',
+    iosBundleId: 'com.mounim.assitme',
   );
 }

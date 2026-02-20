@@ -7,6 +7,10 @@ class HomeWidgetService {
   static const String _androidWidgetName = 'TodayEventsWidget';
   static const String _dailyFitnessWidgetName = 'DailyFitnessWidget';
 
+  // iOS widget names
+  static const String _iOSWidgetName = 'TodayEventsWidget';
+  static const String _iOSDailyFitnessWidgetName = 'DailyFitnessWidget';
+
   /// Updates the home widget with events for today and nearby days
   static Future<void> updateTodayEvents(List<CalendarEventModel> allEvents) async {
     final now = DateTime.now();
@@ -52,14 +56,20 @@ class HomeWidgetService {
       );
     }
 
-    // Trigger widget update
-    await HomeWidget.updateWidget(androidName: _androidWidgetName);
+    // Trigger widget update for both Android and iOS
+    await HomeWidget.updateWidget(
+      androidName: _androidWidgetName,
+      iOSName: _iOSWidgetName,
+    );
   }
 
   /// Clears widget data
   static Future<void> clearWidget() async {
     await HomeWidget.saveWidgetData<String>('today_events', '[]');
-    await HomeWidget.updateWidget(androidName: _androidWidgetName);
+    await HomeWidget.updateWidget(
+      androidName: _androidWidgetName,
+      iOSName: _iOSWidgetName,
+    );
   }
 
   /// Updates the daily fitness widget with calories and gym streak
@@ -78,8 +88,11 @@ class HomeWidgetService {
       // Save whether user has logged today
       await HomeWidget.saveWidgetData<bool>('has_logged_today', hasLoggedToday);
 
-      // Trigger widget update
-      await HomeWidget.updateWidget(androidName: _dailyFitnessWidgetName);
+      // Trigger widget update for both Android and iOS
+      await HomeWidget.updateWidget(
+        androidName: _dailyFitnessWidgetName,
+        iOSName: _iOSDailyFitnessWidgetName,
+      );
     } catch (e) {
       print('Error updating daily fitness widget: $e');
     }
@@ -90,14 +103,20 @@ class HomeWidgetService {
     await HomeWidget.saveWidgetData<int>('total_calories', 0);
     await HomeWidget.saveWidgetData<int>('gym_streak', 0);
     await HomeWidget.saveWidgetData<bool>('has_logged_today', false);
-    await HomeWidget.updateWidget(androidName: _dailyFitnessWidgetName);
+    await HomeWidget.updateWidget(
+      androidName: _dailyFitnessWidgetName,
+      iOSName: _iOSDailyFitnessWidgetName,
+    );
   }
 
   /// Updates only calories data (preserves existing gym data)
   static Future<void> updateCalories(int totalCalories) async {
     try {
       await HomeWidget.saveWidgetData<int>('total_calories', totalCalories);
-      await HomeWidget.updateWidget(androidName: _dailyFitnessWidgetName);
+      await HomeWidget.updateWidget(
+        androidName: _dailyFitnessWidgetName,
+        iOSName: _iOSDailyFitnessWidgetName,
+      );
     } catch (e) {
       print('Error updating calories: $e');
     }
@@ -111,7 +130,10 @@ class HomeWidgetService {
     try {
       await HomeWidget.saveWidgetData<int>('gym_streak', gymStreak);
       await HomeWidget.saveWidgetData<bool>('has_logged_today', hasLoggedToday);
-      await HomeWidget.updateWidget(androidName: _dailyFitnessWidgetName);
+      await HomeWidget.updateWidget(
+        androidName: _dailyFitnessWidgetName,
+        iOSName: _iOSDailyFitnessWidgetName,
+      );
     } catch (e) {
       print('Error updating gym data: $e');
     }

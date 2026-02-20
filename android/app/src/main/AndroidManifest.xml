@@ -41,10 +41,10 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-                <action android:name="com.example.assist_me_app.ACTION_PREV_DAY" />
-                <action android:name="com.example.assist_me_app.ACTION_NEXT_DAY" />
-                <action android:name="com.example.assist_me_app.ACTION_TODAY" />
-                <action android:name="com.example.assist_me_app.ACTION_ITEM_CLICK" />
+                <action android:name="com.mounim.assitme.ACTION_PREV_DAY" />
+                <action android:name="com.mounim.assitme.ACTION_NEXT_DAY" />
+                <action android:name="com.mounim.assitme.ACTION_TODAY" />
+                <action android:name="com.mounim.assitme.ACTION_ITEM_CLICK" />
             </intent-filter>
             <meta-data
                 android:name="android.appwidget.provider"

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:home_widget/home_widget.dart';
 import '../../services/local_storage_service.dart';
 import 'login_screen.dart';
 import '../home/home_screen.dart';
@@ -24,10 +25,20 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
 
     if (!mounted) return;
 
+    // Check if app was launched from widget
+    final Uri? launchUri = await HomeWidget.initiallyLaunchedFromHomeWidget();
+    if (launchUri != null) {
+      print('App launched from widget with URI: $launchUri');
+      // You can handle specific navigation based on the URI here
+    }
+
+    if (!mounted) return;
+
     if (LocalStorageService.isLoggedIn) {
       final savedUser = LocalStorageService.savedUser;
       if (savedUser != null) {
         ref.read(authProvider).restoreUser(savedUser);
+        if (!mounted) return;
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (_) => const HomeScreen()),
@@ -36,6 +47,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
       }
     }
 
+    if (!mounted) return;
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (_) => const LoginScreen()),

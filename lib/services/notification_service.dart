@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -113,6 +114,24 @@ class NotificationService {
   /// Get FCM token and save to Firestore
   Future<void> saveTokenToFirestore(String userId) async {
     try {
+      // On iOS, ensure APNS token is available before getting FCM token
+      if (Platform.isIOS) {
+        final apnsToken = await _messaging.getAPNSToken();
+        if (apnsToken == null) {
+          print('APNS token not available yet, waiting...');
+          // Wait a bit and retry
+          await Future.delayed(const Duration(seconds: 1));
+          final retryToken = await _messaging.getAPNSToken();
+          if (retryToken == null) {
+            print('APNS token still not available, FCM token retrieval may fail');
+          } else {
+            print('APNS token retrieved: $retryToken');
+          }
+        } else {
+          print('APNS token retrieved: $apnsToken');
+        }
+      }
+
       final token = await _messaging.getToken();
       if (token == null) return;
       await FirebaseFirestore.instance.collection('users').doc(userId).update({

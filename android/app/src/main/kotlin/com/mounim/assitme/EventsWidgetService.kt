@@ -1,4 +1,4 @@
-package com.example.assist_me_app
+package com.mounim.assitme
 
 import android.content.Context
 import android.content.Intent
