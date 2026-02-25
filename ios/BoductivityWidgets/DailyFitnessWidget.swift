@@ -1,7 +1,7 @@
 import WidgetKit
 import SwiftUI
 
-private let appGroupId = "group.com.mounim.assitme"
+private let appGroupId = "group.com.mounim.assistme"
 
 // MARK: - Timeline Entry
 

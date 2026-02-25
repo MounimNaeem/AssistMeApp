@@ -2,7 +2,7 @@ import WidgetKit
 import SwiftUI
 import AppIntents
 
-private let appGroupId = "group.com.mounim.assitme"
+private let appGroupId = "group.com.mounim.assistme"
 
 // MARK: - Data Model
 

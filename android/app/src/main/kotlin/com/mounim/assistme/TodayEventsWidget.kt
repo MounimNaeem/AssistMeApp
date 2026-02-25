@@ -1,4 +1,4 @@
-package com.mounim.assitme
+package com.mounim.assistme
 
 import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
@@ -17,10 +17,10 @@ class TodayEventsWidget : AppWidgetProvider() {
 
     companion object {
         private const val TAG = "TodayEventsWidget"
-        const val ACTION_PREV_DAY = "com.mounim.assitme.ACTION_PREV_DAY"
-        const val ACTION_NEXT_DAY = "com.mounim.assitme.ACTION_NEXT_DAY"
-        const val ACTION_TODAY = "com.mounim.assitme.ACTION_TODAY"
-        const val ACTION_ITEM_CLICK = "com.mounim.assitme.ACTION_ITEM_CLICK"
+        const val ACTION_PREV_DAY = "com.mounim.assistme.ACTION_PREV_DAY"
+        const val ACTION_NEXT_DAY = "com.mounim.assistme.ACTION_NEXT_DAY"
+        const val ACTION_TODAY = "com.mounim.assistme.ACTION_TODAY"
+        const val ACTION_ITEM_CLICK = "com.mounim.assistme.ACTION_ITEM_CLICK"
         private const val PREFS_NAME = "HomeWidgetPreferences"
 
         fun updateAllWidgets(context: Context) {

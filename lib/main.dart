@@ -23,7 +23,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // Set App Group ID for iOS widget data sharing
-  HomeWidget.setAppGroupId('group.com.mounim.assitme');
+  HomeWidget.setAppGroupId('group.com.mounim.assistme');
 
   // Register widget interaction callback
   HomeWidget.registerInteractivityCallback(backgroundCallback);
