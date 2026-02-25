@@ -209,7 +209,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           final isAvgCalories = index == 0;
 
           return Container(
-            width: 100.w,
+            width: 105.w,
             margin: EdgeInsets.only(right: 16.w),
             padding: EdgeInsets.all(12.w),
             decoration: BoxDecoration(

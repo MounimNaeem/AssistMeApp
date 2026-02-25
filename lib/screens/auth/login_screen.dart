@@ -30,10 +30,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   void _handleLogin() async {
     if (_formKey.currentState!.validate()) {
-      await ref.read(authProvider).login(
-            _emailController.text.trim(),
-            _passwordController.text.trim(),
-          );
+      await ref
+          .read(authProvider)
+          .login(_emailController.text.trim(), _passwordController.text.trim());
 
       if (ref.read(authProvider).currentUser != null && mounted) {
         Navigator.pushReplacementNamed(context, AppRouter.home);
@@ -64,7 +63,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       color: AppColors.primary.withOpacity(0.1),
                       shape: BoxShape.circle,
                     ),
-                    child: Icon(Icons.rocket_launch_rounded, size: 50.w, color: AppColors.primary),
+                    child: Icon(
+                      Icons.rocket_launch_rounded,
+                      size: 50.w,
+                      color: AppColors.primary,
+                    ),
                   ),
                   SizedBox(height: 24.h),
                   Text(
@@ -85,7 +88,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     hint: 'hello@example.com',
                     prefixIcon: const Icon(Icons.email_rounded),
                     keyboardType: TextInputType.emailAddress,
-                    validator: (val) => val == null || val.isEmpty ? 'Required' : null,
+                    validator: (val) =>
+                        val == null || val.isEmpty ? 'Required' : null,
                   ),
                   SizedBox(height: 20.h),
                   CustomTextField(
@@ -95,17 +99,30 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     obscureText: _obscurePassword,
                     prefixIcon: const Icon(Icons.lock_rounded),
                     suffixIcon: IconButton(
-                      icon: Icon(_obscurePassword ? Icons.visibility_off : Icons.visibility, color: AppColors.grey),
-                      onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
+                      icon: Icon(
+                        _obscurePassword
+                            ? Icons.visibility_off
+                            : Icons.visibility,
+                        color: AppColors.grey,
+                      ),
+                      onPressed: () =>
+                          setState(() => _obscurePassword = !_obscurePassword),
                     ),
-                    validator: (val) => val == null || val.isEmpty ? 'Required' : null,
+                    validator: (val) =>
+                        val == null || val.isEmpty ? 'Required' : null,
                   ),
                   SizedBox(height: 12.h),
                   Align(
                     alignment: Alignment.centerRight,
                     child: TextButton(
                       onPressed: () {},
-                      child: Text('Forgot Password?', style: AppTextStyles.caption.copyWith(color: AppColors.primary, fontWeight: FontWeight.w600)),
+                      child: Text(
+                        'Forgot Password?',
+                        style: AppTextStyles.caption.copyWith(
+                          color: AppColors.primary,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
                     ),
                   ),
                   SizedBox(height: 24.h),
@@ -118,7 +135,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       ),
                       child: Text(
                         authState.errorMessage!,
-                        style: AppTextStyles.caption.copyWith(color: AppColors.error, fontWeight: FontWeight.w500),
+                        style: AppTextStyles.caption.copyWith(
+                          color: AppColors.error,
+                          fontWeight: FontWeight.w500,
+                        ),
                         textAlign: TextAlign.center,
                       ),
                     ),
@@ -130,22 +150,22 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     isLoading: authState.isLoading,
                   ),
                   SizedBox(height: 32.h),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text("Don't have an account? ", style: AppTextStyles.bodyText.copyWith(color: AppColors.grey)),
-                      GestureDetector(
-                        onTap: () => Navigator.pushNamed(context, AppRouter.signup),
-                        child: Text(
-                          "Sign Up",
-                          style: AppTextStyles.bodyText.copyWith(
-                            color: AppColors.primary,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+                  // Row(
+                  //   mainAxisAlignment: MainAxisAlignment.center,
+                  //   children: [
+                  //     Text("Don't have an account? ", style: AppTextStyles.bodyText.copyWith(color: AppColors.grey)),
+                  //     GestureDetector(
+                  //       onTap: () => Navigator.pushNamed(context, AppRouter.signup),
+                  //       child: Text(
+                  //         "Sign Up",
+                  //         style: AppTextStyles.bodyText.copyWith(
+                  //           color: AppColors.primary,
+                  //           fontWeight: FontWeight.w700,
+                  //         ),
+                  //       ),
+                  //     ),
+                  //   ],
+                  // ),
                 ],
               ),
             ),
