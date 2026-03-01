@@ -130,6 +130,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   }
 
   Widget _buildDashboardStats(int avgCalories) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final metricsState = ref.watch(healthMetricsProvider);
     final latest = metricsState.latestMetrics;
     final calorieGoal = latest?.calorieGoal;
@@ -213,14 +214,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             margin: EdgeInsets.only(right: 16.w),
             padding: EdgeInsets.all(12.w),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: isDark ? AppColors.darkCard : Colors.white,
               borderRadius: BorderRadius.circular(20.r),
               border: isAvgCalories
                   ? Border.all(color: stat['color'] as Color, width: 2)
                   : null,
               boxShadow: [
                 BoxShadow(
-                  color: (stat['color'] as Color).withValues(alpha: 0.05),
+                  color: isDark
+                      ? Colors.transparent
+                      : (stat['color'] as Color).withValues(alpha: 0.05),
                   blurRadius: 15,
                   offset: const Offset(0, 5),
                 ),
@@ -240,10 +243,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   children: [
                     Text(
                       stat['value'] as String,
-                      style: AppTextStyles.bodyText.copyWith(
-                        fontWeight: FontWeight.w800,
-                        fontSize: 14.sp,
-                      ),
+                      style: AppTextStyles.bodyText
+                          .adaptive(context)
+                          .copyWith(
+                            fontWeight: FontWeight.w800,
+                            fontSize: 14.sp,
+                          ),
                     ),
                     Text(
                       stat['label'] as String,
@@ -264,6 +269,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final auth = ref.watch(authProvider);
     final user = auth.currentUser;
     final foodState = ref.watch(foodProvider);
@@ -271,9 +277,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final avgCalories = homeState.getAverageCaloriesLast3Days(foodState);
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: AppColors.primary,
+        backgroundColor: isDark ? AppColors.darkSurface : AppColors.primary,
         elevation: 0,
         automaticallyImplyLeading: false,
         toolbarHeight: 80.h,
@@ -282,7 +288,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             gradient: LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
-              colors: [AppColors.primary, AppColors.primaryDark],
+              colors: isDark
+                  ? [AppColors.darkSurface, AppColors.darkBackground]
+                  : [AppColors.primary, AppColors.primaryDark],
             ),
           ),
         ),
@@ -354,7 +362,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Daily Modules', style: AppTextStyles.heading2),
+                  Text(
+                    'Daily Modules',
+                    style: AppTextStyles.heading2.adaptive(context),
+                  ),
                   SizedBox(height: 16.h),
                   GridView.count(
                     shrinkWrap: true,

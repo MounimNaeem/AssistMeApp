@@ -139,7 +139,7 @@ class _AddFoodBottomSheetState extends ConsumerState<AddFoodBottomSheet> {
 
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.background,
+        color: Theme.of(context).scaffoldBackgroundColor,
         borderRadius: BorderRadius.vertical(top: Radius.circular(32.r)),
       ),
       padding: EdgeInsets.only(
@@ -285,7 +285,9 @@ class _AddFoodBottomSheetState extends ConsumerState<AddFoodBottomSheet> {
           icon: const Icon(Icons.expand_more_rounded),
           decoration: InputDecoration(
             filled: true,
-            fillColor: Colors.white,
+            fillColor: Theme.of(context).brightness == Brightness.dark
+                ? AppColors.darkCard
+                : Colors.white,
             contentPadding: EdgeInsets.symmetric(
               horizontal: 16.w,
               vertical: 14.h,
@@ -296,7 +298,11 @@ class _AddFoodBottomSheetState extends ConsumerState<AddFoodBottomSheet> {
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(16.r),
-              borderSide: BorderSide(color: AppColors.lightGrey),
+              borderSide: BorderSide(
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? AppColors.darkLightGrey
+                    : AppColors.lightGrey,
+              ),
             ),
           ),
           items: items
@@ -331,9 +337,15 @@ class _AddFoodBottomSheetState extends ConsumerState<AddFoodBottomSheet> {
         Container(
           padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 6.h),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: Theme.of(context).brightness == Brightness.dark
+                ? AppColors.darkCard
+                : Colors.white,
             borderRadius: BorderRadius.circular(16.r),
-            border: Border.all(color: AppColors.lightGrey),
+            border: Border.all(
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? AppColors.darkLightGrey
+                  : AppColors.lightGrey,
+            ),
           ),
           child: CupertinoCalendarPickerButton(
             minimumDateTime: DateTime(2020),
@@ -364,9 +376,15 @@ class _AddFoodBottomSheetState extends ConsumerState<AddFoodBottomSheet> {
         Container(
           padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 6.h),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: Theme.of(context).brightness == Brightness.dark
+                ? AppColors.darkCard
+                : Colors.white,
             borderRadius: BorderRadius.circular(16.r),
-            border: Border.all(color: AppColors.lightGrey),
+            border: Border.all(
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? AppColors.darkLightGrey
+                  : AppColors.lightGrey,
+            ),
           ),
           child: CupertinoTimePickerButton(
             initialTime: TimeOfDay.fromDateTime(_selectedTime),

@@ -40,7 +40,9 @@ class _WorkoutExecutionScreenState
     _nameController.text = _workout.routineName;
 
     // Fetch previous completed workout for this routine to show hints
-    _previousWorkout = ref.read(gymProvider).getLastCompletedWorkoutForRoutine(_workout.routineId);
+    _previousWorkout = ref
+        .read(gymProvider)
+        .getLastCompletedWorkoutForRoutine(_workout.routineId);
   }
 
   @override
@@ -176,7 +178,9 @@ class _WorkoutExecutionScreenState
 
         // Return the weight as a string (remove decimal if it's a whole number)
         if (weight > 0) {
-          return weight % 1 == 0 ? weight.toInt().toString() : weight.toString();
+          return weight % 1 == 0
+              ? weight.toInt().toString()
+              : weight.toString();
         }
       }
     } catch (_) {
@@ -198,7 +202,7 @@ class _WorkoutExecutionScreenState
         }
       },
       child: Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         appBar: AppBar(
           title: Text(DateFormat('MMM d').format(_workout.date)),
           elevation: 0,
@@ -263,7 +267,9 @@ class _WorkoutExecutionScreenState
                   ),
                   border: InputBorder.none,
                   filled: true,
-                  fillColor: AppColors.background,
+                  fillColor: Theme.of(context).brightness == Brightness.dark
+                      ? AppColors.darkCard
+                      : AppColors.background,
                   contentPadding: EdgeInsets.all(12.w),
                 ),
               ),
@@ -309,9 +315,15 @@ class _WorkoutExecutionScreenState
           width: double.infinity,
           padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: Theme.of(context).brightness == Brightness.dark
+                ? AppColors.darkCard
+                : Colors.white,
             borderRadius: BorderRadius.circular(16.r),
-            border: Border.all(color: AppColors.lightGrey),
+            border: Border.all(
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? AppColors.darkLightGrey
+                  : AppColors.lightGrey,
+            ),
           ),
           child: Theme(
             data: Theme.of(context).copyWith(
@@ -352,9 +364,15 @@ class _WorkoutExecutionScreenState
           width: double.infinity,
           padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: Theme.of(context).brightness == Brightness.dark
+                ? AppColors.darkCard
+                : Colors.white,
             borderRadius: BorderRadius.circular(16.r),
-            border: Border.all(color: AppColors.lightGrey),
+            border: Border.all(
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? AppColors.darkLightGrey
+                  : AppColors.lightGrey,
+            ),
           ),
           child: Theme(
             data: Theme.of(context).copyWith(
@@ -393,9 +411,15 @@ class _WorkoutExecutionScreenState
           width: double.infinity,
           padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: Theme.of(context).brightness == Brightness.dark
+                ? AppColors.darkCard
+                : Colors.white,
             borderRadius: BorderRadius.circular(16.r),
-            border: Border.all(color: AppColors.lightGrey),
+            border: Border.all(
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? AppColors.darkLightGrey
+                  : AppColors.lightGrey,
+            ),
           ),
           child: hasEndTime
               ? Theme(
@@ -461,9 +485,9 @@ class _WorkoutExecutionScreenState
               child: Center(
                 child: Text(
                   'kg',
-                  style: AppTextStyles.caption.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: AppTextStyles.caption
+                      .adaptive(context)
+                      .copyWith(fontWeight: FontWeight.bold),
                 ),
               ),
             ),
@@ -471,9 +495,9 @@ class _WorkoutExecutionScreenState
               child: Center(
                 child: Text(
                   'Reps',
-                  style: AppTextStyles.caption.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: AppTextStyles.caption
+                      .adaptive(context)
+                      .copyWith(fontWeight: FontWeight.bold),
                 ),
               ),
             ),
@@ -481,9 +505,9 @@ class _WorkoutExecutionScreenState
               child: Center(
                 child: Text(
                   'Notes',
-                  style: AppTextStyles.caption.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: AppTextStyles.caption
+                      .adaptive(context)
+                      .copyWith(fontWeight: FontWeight.bold),
                 ),
               ),
             ),
@@ -673,7 +697,9 @@ class _InputBoxState extends State<_InputBox> {
     return Container(
       height: 40.h,
       decoration: BoxDecoration(
-        color: AppColors.background,
+        color: Theme.of(context).brightness == Brightness.dark
+            ? AppColors.darkElevated
+            : AppColors.background,
         borderRadius: BorderRadius.circular(4.r),
       ),
       child: Focus(
@@ -686,12 +712,16 @@ class _InputBoxState extends State<_InputBox> {
             border: InputBorder.none,
             contentPadding: EdgeInsets.zero,
             hintText: widget.hint,
-            hintStyle: AppTextStyles.bodyText.copyWith(
-              fontSize: 14.sp,
-              color: AppColors.grey.withValues(alpha: 0.5),
-            ),
+            hintStyle: AppTextStyles.bodyText
+                .adaptive(context)
+                .copyWith(
+                  fontSize: 14.sp,
+                  color: AppColors.grey.withValues(alpha: 0.5),
+                ),
           ),
-          style: AppTextStyles.bodyText.copyWith(fontSize: 14.sp),
+          style: AppTextStyles.bodyText
+              .adaptive(context)
+              .copyWith(fontSize: 14.sp),
           onChanged: widget.onChanged,
         ),
       ),

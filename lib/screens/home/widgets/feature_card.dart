@@ -21,13 +21,15 @@ class FeatureCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? AppColors.darkCard : Colors.white,
         borderRadius: BorderRadius.circular(24.r),
         boxShadow: [
           BoxShadow(
-            color: color.withOpacity(0.08),
+            color: isDark ? Colors.transparent : color.withOpacity(0.08),
             blurRadius: 24,
             offset: const Offset(0, 8),
           ),
@@ -54,10 +56,9 @@ class FeatureCard extends StatelessWidget {
                 const Spacer(),
                 Text(
                   title,
-                  style: AppTextStyles.heading2.copyWith(
-                    fontSize: 14.sp,
-                    height: 1.1,
-                  ),
+                  style: AppTextStyles.heading2
+                      .adaptive(context)
+                      .copyWith(fontSize: 14.sp, height: 1.1),
                 ),
                 SizedBox(height: 2.h),
                 Text(
@@ -65,7 +66,7 @@ class FeatureCard extends StatelessWidget {
                   style: AppTextStyles.caption.copyWith(
                     fontWeight: FontWeight.w600,
                     fontSize: 10.sp,
-                    color: AppColors.grey,
+                    color: isDark ? AppColors.darkGrey : AppColors.grey,
                     height: 1.1,
                   ),
                   maxLines: 1,

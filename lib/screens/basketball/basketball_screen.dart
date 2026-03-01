@@ -8,7 +8,9 @@ import 'models/basketball_drill_model.dart';
 import 'widgets/drill_list_view.dart';
 import 'widgets/add_drill_bottom_sheet.dart';
 
-final basketballProvider = ChangeNotifierProvider((ref) => BasketballProvider());
+final basketballProvider = ChangeNotifierProvider(
+  (ref) => BasketballProvider(),
+);
 
 class BasketballScreen extends ConsumerStatefulWidget {
   const BasketballScreen({super.key});
@@ -40,18 +42,17 @@ class _BasketballScreenState extends ConsumerState<BasketballScreen> {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (_) => AddDrillBottomSheet(
-        category: _categories[_currentIndex],
-      ),
+      builder: (_) => AddDrillBottomSheet(category: _categories[_currentIndex]),
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final currentCategory = _categories[_currentIndex];
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
         backgroundColor: AppColors.sportsColor,
         surfaceTintColor: Colors.transparent,
@@ -75,10 +76,12 @@ class _BasketballScreenState extends ConsumerState<BasketballScreen> {
       ),
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: isDark ? AppColors.darkCard : Colors.white,
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.05),
+              color: isDark
+                  ? Colors.transparent
+                  : Colors.black.withValues(alpha: 0.05),
               blurRadius: 10,
               offset: const Offset(0, -5),
             ),

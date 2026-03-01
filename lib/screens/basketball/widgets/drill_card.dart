@@ -41,11 +41,15 @@ class DrillCard extends StatelessWidget {
     return Container(
       margin: EdgeInsets.only(bottom: 16.h),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).brightness == Brightness.dark
+            ? AppColors.darkCard
+            : Colors.white,
         borderRadius: BorderRadius.circular(16.r),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
+            color: Theme.of(context).brightness == Brightness.dark
+                ? Colors.transparent
+                : Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 2),
           ),
@@ -85,10 +89,12 @@ class DrillCard extends StatelessWidget {
                     children: [
                       Text(
                         drill.drillName,
-                        style: AppTextStyles.bodyText.copyWith(
-                          fontWeight: FontWeight.w700,
-                          fontSize: 16.sp,
-                        ),
+                        style: AppTextStyles.bodyText
+                            .adaptive(context)
+                            .copyWith(
+                              fontWeight: FontWeight.w700,
+                              fontSize: 16.sp,
+                            ),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -135,11 +141,15 @@ class DrillCard extends StatelessWidget {
               children: [
                 Text(
                   drill.description,
-                  style: AppTextStyles.bodyText.copyWith(
-                    fontSize: 14.sp,
-                    color: AppColors.onBackground,
-                    height: 1.4,
-                  ),
+                  style: AppTextStyles.bodyText
+                      .adaptive(context)
+                      .copyWith(
+                        fontSize: 14.sp,
+                        color: Theme.of(context).brightness == Brightness.dark
+                            ? AppColors.darkOnBackground
+                            : AppColors.onBackground,
+                        height: 1.4,
+                      ),
                 ),
                 if (drill.videoUrl != null && drill.videoUrl!.isNotEmpty) ...[
                   SizedBox(height: 12.h),

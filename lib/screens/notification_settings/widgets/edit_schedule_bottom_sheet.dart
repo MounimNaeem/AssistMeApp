@@ -20,11 +20,7 @@ class EditScheduleBottomSheet extends ConsumerStatefulWidget {
 
   /// Factory constructor for creating a new notification
   factory EditScheduleBottomSheet.create({Key? key}) {
-    return EditScheduleBottomSheet(
-      key: key,
-      schedule: null,
-      isEditMode: false,
-    );
+    return EditScheduleBottomSheet(key: key, schedule: null, isEditMode: false);
   }
 
   /// Factory constructor for editing an existing notification
@@ -62,15 +58,14 @@ class _EditScheduleBottomSheetState
     'Thu',
     'Fri',
     'Sat',
-    'Sun'
+    'Sun',
   ];
 
   @override
   void initState() {
     super.initState();
     // Use existing schedule or create a new one
-    _workingSchedule =
-        widget.schedule ?? NotificationScheduleModel.createNew();
+    _workingSchedule = widget.schedule ?? NotificationScheduleModel.createNew();
 
     _titleController = TextEditingController(text: _workingSchedule.title);
     _bodyController = TextEditingController(text: _workingSchedule.body);
@@ -205,9 +200,15 @@ class _EditScheduleBottomSheetState
 
     // For selected_days, find the next matching day
     if (_frequencyType == 'selected_days' && _selectedDays.isNotEmpty) {
-      final dayMap = {'Sun': DateTime.sunday, 'Mon': DateTime.monday, 'Tue': DateTime.tuesday,
-                      'Wed': DateTime.wednesday, 'Thu': DateTime.thursday, 'Fri': DateTime.friday,
-                      'Sat': DateTime.saturday};
+      final dayMap = {
+        'Sun': DateTime.sunday,
+        'Mon': DateTime.monday,
+        'Tue': DateTime.tuesday,
+        'Wed': DateTime.wednesday,
+        'Thu': DateTime.thursday,
+        'Fri': DateTime.friday,
+        'Sat': DateTime.saturday,
+      };
       final selectedDayNums = _selectedDays.map((d) => dayMap[d]!).toList();
 
       // Find next matching day
@@ -288,7 +289,7 @@ class _EditScheduleBottomSheetState
 
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.background,
+        color: Theme.of(context).scaffoldBackgroundColor,
         borderRadius: BorderRadius.vertical(top: Radius.circular(32.r)),
       ),
       padding: EdgeInsets.only(
@@ -319,8 +320,12 @@ class _EditScheduleBottomSheetState
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    widget.isEditMode ? 'Edit Notification' : 'New Notification',
-                    style: AppTextStyles.heading1.copyWith(fontSize: 24.sp),
+                    widget.isEditMode
+                        ? 'Edit Notification'
+                        : 'New Notification',
+                    style: AppTextStyles.heading1
+                        .adaptive(context)
+                        .copyWith(fontSize: 24.sp),
                   ),
                   if (widget.isEditMode)
                     IconButton(
@@ -371,7 +376,9 @@ class _EditScheduleBottomSheetState
               // Frequency section
               Text(
                 'Frequency',
-                style: AppTextStyles.heading2.copyWith(fontSize: 16.sp),
+                style: AppTextStyles.heading2
+                    .adaptive(context)
+                    .copyWith(fontSize: 16.sp),
               ),
               SizedBox(height: 12.h),
 
@@ -379,9 +386,15 @@ class _EditScheduleBottomSheetState
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 16.w),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: Theme.of(context).brightness == Brightness.dark
+                      ? AppColors.darkCard
+                      : Colors.white,
                   borderRadius: BorderRadius.circular(12.r),
-                  border: Border.all(color: AppColors.lightGrey),
+                  border: Border.all(
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? AppColors.darkLightGrey
+                        : AppColors.lightGrey,
+                  ),
                 ),
                 child: DropdownButtonHideUnderline(
                   child: DropdownButton<String>(
@@ -391,9 +404,9 @@ class _EditScheduleBottomSheetState
                       Icons.keyboard_arrow_down_rounded,
                       color: AppColors.notificationColor,
                     ),
-                    style: AppTextStyles.bodyText.copyWith(
-                      fontWeight: FontWeight.w600,
-                    ),
+                    style: AppTextStyles.bodyText
+                        .adaptive(context)
+                        .copyWith(fontWeight: FontWeight.w600),
                     items: const [
                       DropdownMenuItem(value: 'daily', child: Text('Daily')),
                       DropdownMenuItem(
@@ -435,7 +448,7 @@ class _EditScheduleBottomSheetState
                   children: [
                     Text(
                       'Every',
-                      style: AppTextStyles.bodyText,
+                      style: AppTextStyles.bodyText.adaptive(context),
                     ),
                     SizedBox(width: 12.w),
                     SizedBox(
@@ -450,7 +463,10 @@ class _EditScheduleBottomSheetState
                         ),
                         decoration: InputDecoration(
                           filled: true,
-                          fillColor: Colors.white,
+                          fillColor:
+                              Theme.of(context).brightness == Brightness.dark
+                              ? AppColors.darkCard
+                              : Colors.white,
                           contentPadding: EdgeInsets.symmetric(
                             horizontal: 12.w,
                             vertical: 14.h,
@@ -461,7 +477,13 @@ class _EditScheduleBottomSheetState
                           ),
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12.r),
-                            borderSide: BorderSide(color: AppColors.lightGrey),
+                            borderSide: BorderSide(
+                              color:
+                                  Theme.of(context).brightness ==
+                                      Brightness.dark
+                                  ? AppColors.darkLightGrey
+                                  : AppColors.lightGrey,
+                            ),
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12.r),
@@ -485,8 +507,8 @@ class _EditScheduleBottomSheetState
                       _frequencyType == 'days'
                           ? 'days'
                           : _frequencyType == 'weeks'
-                              ? 'weeks'
-                              : 'months',
+                          ? 'weeks'
+                          : 'months',
                       style: AppTextStyles.bodyText,
                     ),
                   ],
@@ -519,21 +541,33 @@ class _EditScheduleBottomSheetState
                         decoration: BoxDecoration(
                           color: isSelected
                               ? AppColors.notificationColor
-                              : Colors.white,
+                              : (Theme.of(context).brightness == Brightness.dark
+                                    ? AppColors.darkCard
+                                    : Colors.white),
                           borderRadius: BorderRadius.circular(10.r),
                           border: Border.all(
                             color: isSelected
                                 ? AppColors.notificationColor
-                                : AppColors.lightGrey,
+                                : (Theme.of(context).brightness ==
+                                          Brightness.dark
+                                      ? AppColors.darkLightGrey
+                                      : AppColors.lightGrey),
                           ),
                         ),
                         child: Text(
                           day,
-                          style: AppTextStyles.bodyText.copyWith(
-                            fontSize: 14.sp,
-                            fontWeight: FontWeight.w600,
-                            color: isSelected ? Colors.white : AppColors.grey,
-                          ),
+                          style: AppTextStyles.bodyText
+                              .adaptive(context)
+                              .copyWith(
+                                fontSize: 14.sp,
+                                fontWeight: FontWeight.w600,
+                                color: isSelected
+                                    ? Colors.white
+                                    : (Theme.of(context).brightness ==
+                                              Brightness.dark
+                                          ? AppColors.darkGrey
+                                          : AppColors.grey),
+                              ),
                         ),
                       ),
                     );
@@ -576,7 +610,9 @@ class _EditScheduleBottomSheetState
               // Time picker
               Text(
                 'Preferred Time',
-                style: AppTextStyles.heading2.copyWith(fontSize: 16.sp),
+                style: AppTextStyles.heading2
+                    .adaptive(context)
+                    .copyWith(fontSize: 16.sp),
               ),
               SizedBox(height: 12.h),
 
@@ -589,9 +625,15 @@ class _EditScheduleBottomSheetState
                     vertical: 16.h,
                   ),
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? AppColors.darkCard
+                        : Colors.white,
                     borderRadius: BorderRadius.circular(16.r),
-                    border: Border.all(color: AppColors.lightGrey),
+                    border: Border.all(
+                      color: Theme.of(context).brightness == Brightness.dark
+                          ? AppColors.darkLightGrey
+                          : AppColors.lightGrey,
+                    ),
                   ),
                   child: Row(
                     children: [
@@ -619,7 +661,9 @@ class _EditScheduleBottomSheetState
               SizedBox(height: 32.h),
 
               CustomButton(
-                text: widget.isEditMode ? 'Save Changes' : 'Create Notification',
+                text: widget.isEditMode
+                    ? 'Save Changes'
+                    : 'Create Notification',
                 onPressed: _handleSave,
                 isLoading: isLoading,
                 backgroundColor: AppColors.notificationColor,

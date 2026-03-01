@@ -19,7 +19,8 @@ class RoutineDetailScreen extends ConsumerStatefulWidget {
   const RoutineDetailScreen({super.key, required this.routineId});
 
   @override
-  ConsumerState<RoutineDetailScreen> createState() => _RoutineDetailScreenState();
+  ConsumerState<RoutineDetailScreen> createState() =>
+      _RoutineDetailScreenState();
 }
 
 class _RoutineDetailScreenState extends ConsumerState<RoutineDetailScreen> {
@@ -55,7 +56,9 @@ class _RoutineDetailScreenState extends ConsumerState<RoutineDetailScreen> {
     if (userId == null) return;
 
     // Check if there's an incomplete workout for this routine
-    final incompleteWorkout = ref.read(gymProvider).getIncompleteWorkoutForRoutine(routine.id);
+    final incompleteWorkout = ref
+        .read(gymProvider)
+        .getIncompleteWorkoutForRoutine(routine.id);
 
     if (incompleteWorkout != null) {
       // Resume existing workout
@@ -69,7 +72,9 @@ class _RoutineDetailScreenState extends ConsumerState<RoutineDetailScreen> {
       }
     } else {
       // Start new workout
-      final workout = await ref.read(gymProvider).startWorkoutFromRoutine(routine, userId);
+      final workout = await ref
+          .read(gymProvider)
+          .startWorkoutFromRoutine(routine, userId);
       if (mounted) {
         Navigator.push(
           context,
@@ -116,7 +121,7 @@ class _RoutineDetailScreenState extends ConsumerState<RoutineDetailScreen> {
     _initializeControllers(routine);
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
         backgroundColor: AppColors.gymColor,
         surfaceTintColor: Colors.transparent,
@@ -210,7 +215,9 @@ class _RoutineDetailScreenState extends ConsumerState<RoutineDetailScreen> {
             // Exercises Section
             Text(
               'Exercises',
-              style: AppTextStyles.heading2.copyWith(fontSize: 18.sp),
+              style: AppTextStyles.heading2
+                  .adaptive(context)
+                  .copyWith(fontSize: 18.sp),
             ),
             SizedBox(height: 12.h),
 
@@ -220,7 +227,9 @@ class _RoutineDetailScreenState extends ConsumerState<RoutineDetailScreen> {
                   padding: EdgeInsets.symmetric(vertical: 32.h),
                   child: Text(
                     'No exercises added yet',
-                    style: AppTextStyles.caption.copyWith(color: AppColors.grey),
+                    style: AppTextStyles.caption.copyWith(
+                      color: AppColors.grey,
+                    ),
                   ),
                 ),
               )
@@ -250,7 +259,10 @@ class _RoutineDetailScreenState extends ConsumerState<RoutineDetailScreen> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.gymColor,
                   foregroundColor: Colors.white,
-                  padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 12.h),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 24.w,
+                    vertical: 12.h,
+                  ),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(25.r),
                   ),
@@ -286,9 +298,15 @@ class _RoutineDetailScreenState extends ConsumerState<RoutineDetailScreen> {
           width: double.infinity,
           padding: EdgeInsets.symmetric(horizontal: 16.w),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: Theme.of(context).brightness == Brightness.dark
+                ? AppColors.darkCard
+                : Colors.white,
             borderRadius: BorderRadius.circular(16.r),
-            border: Border.all(color: AppColors.lightGrey),
+            border: Border.all(
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? AppColors.darkLightGrey
+                  : AppColors.lightGrey,
+            ),
           ),
           child: DropdownButtonHideUnderline(
             child: DropdownButton<String>(
@@ -296,10 +314,7 @@ class _RoutineDetailScreenState extends ConsumerState<RoutineDetailScreen> {
               isExpanded: true,
               icon: const Icon(Icons.arrow_drop_down_rounded),
               items: targets.map((target) {
-                return DropdownMenuItem(
-                  value: target,
-                  child: Text(target),
-                );
+                return DropdownMenuItem(value: target, child: Text(target));
               }).toList(),
               onChanged: (value) {
                 if (value != null) {
@@ -352,7 +367,9 @@ class _RoutineDetailScreenState extends ConsumerState<RoutineDetailScreen> {
       context: context,
       builder: (ctx) => AlertDialog(
         title: const Text('Delete Routine'),
-        content: Text('Are you sure you want to delete "${routine.routineName}"?'),
+        content: Text(
+          'Are you sure you want to delete "${routine.routineName}"?',
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
@@ -364,7 +381,10 @@ class _RoutineDetailScreenState extends ConsumerState<RoutineDetailScreen> {
               Navigator.pop(ctx);
               Navigator.pop(context);
             },
-            child: const Text('Delete', style: TextStyle(color: AppColors.error)),
+            child: const Text(
+              'Delete',
+              style: TextStyle(color: AppColors.error),
+            ),
           ),
         ],
       ),
@@ -396,9 +416,9 @@ class _ExerciseListItem extends StatelessWidget {
               children: [
                 Text(
                   exercise.exerciseName,
-                  style: AppTextStyles.bodyText.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
+                  style: AppTextStyles.bodyText
+                      .adaptive(context)
+                      .copyWith(fontWeight: FontWeight.w600),
                 ),
                 SizedBox(height: 4.h),
                 Text(

@@ -49,7 +49,7 @@ class _NotificationSettingsScreenState
     final state = ref.watch(notificationSettingsProvider);
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
         title: Text(
           'Notifications',
@@ -66,20 +66,20 @@ class _NotificationSettingsScreenState
       body: state.isLoading && state.schedules.isEmpty
           ? const LoadingIndicator(message: 'Loading settings...')
           : state.schedules.isEmpty
-              ? _buildEmptyState()
-              : ListView.builder(
-                  padding: EdgeInsets.only(
-                    left: 20.w,
-                    right: 20.w,
-                    top: 20.w,
-                    bottom: 80.h, // Extra padding for FAB
-                  ),
-                  itemCount: state.schedules.length,
-                  itemBuilder: (context, index) {
-                    final schedule = state.schedules[index];
-                    return _buildScheduleCard(schedule);
-                  },
-                ),
+          ? _buildEmptyState()
+          : ListView.builder(
+              padding: EdgeInsets.only(
+                left: 20.w,
+                right: 20.w,
+                top: 20.w,
+                bottom: 80.h, // Extra padding for FAB
+              ),
+              itemCount: state.schedules.length,
+              itemBuilder: (context, index) {
+                final schedule = state.schedules[index];
+                return _buildScheduleCard(schedule);
+              },
+            ),
     );
   }
 
@@ -87,11 +87,15 @@ class _NotificationSettingsScreenState
     return Container(
       margin: EdgeInsets.only(bottom: 16.h),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).brightness == Brightness.dark
+            ? AppColors.darkCard
+            : Colors.white,
         borderRadius: BorderRadius.circular(20.r),
         boxShadow: [
           BoxShadow(
-            color: AppColors.notificationColor.withValues(alpha: 0.08),
+            color: Theme.of(context).brightness == Brightness.dark
+                ? Colors.transparent
+                : AppColors.notificationColor.withValues(alpha: 0.08),
             blurRadius: 20,
             offset: const Offset(0, 6),
           ),
@@ -112,7 +116,9 @@ class _NotificationSettingsScreenState
                     Container(
                       padding: EdgeInsets.all(12.w),
                       decoration: BoxDecoration(
-                        color: AppColors.notificationColor.withValues(alpha: 0.1),
+                        color: AppColors.notificationColor.withValues(
+                          alpha: 0.1,
+                        ),
                         borderRadius: BorderRadius.circular(14.r),
                       ),
                       child: Icon(
@@ -128,9 +134,9 @@ class _NotificationSettingsScreenState
                         children: [
                           Text(
                             schedule.displayName,
-                            style: AppTextStyles.heading2.copyWith(
-                              fontSize: 16.sp,
-                            ),
+                            style: AppTextStyles.heading2
+                                .adaptive(context)
+                                .copyWith(fontSize: 16.sp),
                           ),
                           SizedBox(height: 4.h),
                           Text(
@@ -150,8 +156,9 @@ class _NotificationSettingsScreenState
                             .read(notificationSettingsProvider)
                             .toggleSchedule(schedule.id, value);
                       },
-                      activeTrackColor:
-                          AppColors.notificationColor.withValues(alpha: 0.5),
+                      activeTrackColor: AppColors.notificationColor.withValues(
+                        alpha: 0.5,
+                      ),
                       thumbColor: WidgetStateProperty.resolveWith((states) {
                         if (states.contains(WidgetState.selected)) {
                           return AppColors.notificationColor;
@@ -165,7 +172,9 @@ class _NotificationSettingsScreenState
                 Container(
                   padding: EdgeInsets.all(14.w),
                   decoration: BoxDecoration(
-                    color: AppColors.background,
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? AppColors.darkElevated
+                        : AppColors.background,
                     borderRadius: BorderRadius.circular(12.r),
                   ),
                   child: Column(
@@ -182,10 +191,12 @@ class _NotificationSettingsScreenState
                           Expanded(
                             child: Text(
                               schedule.title,
-                              style: AppTextStyles.bodyText.copyWith(
-                                fontWeight: FontWeight.w600,
-                                fontSize: 14.sp,
-                              ),
+                              style: AppTextStyles.bodyText
+                                  .adaptive(context)
+                                  .copyWith(
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 14.sp,
+                                  ),
                             ),
                           ),
                         ],
@@ -203,9 +214,9 @@ class _NotificationSettingsScreenState
                           Expanded(
                             child: Text(
                               schedule.body,
-                              style: AppTextStyles.caption.copyWith(
-                                fontSize: 13.sp,
-                              ),
+                              style: AppTextStyles.caption
+                                  .adaptive(context)
+                                  .copyWith(fontSize: 13.sp),
                             ),
                           ),
                         ],
@@ -221,10 +232,12 @@ class _NotificationSettingsScreenState
                           SizedBox(width: 8.w),
                           Text(
                             _formatTime(schedule.preferredTime),
-                            style: AppTextStyles.caption.copyWith(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 13.sp,
-                            ),
+                            style: AppTextStyles.caption
+                                .adaptive(context)
+                                .copyWith(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 13.sp,
+                                ),
                           ),
                         ],
                       ),
@@ -243,11 +256,7 @@ class _NotificationSettingsScreenState
                       ),
                     ),
                     SizedBox(width: 4.w),
-                    Icon(
-                      Icons.edit_rounded,
-                      size: 14.w,
-                      color: AppColors.grey,
-                    ),
+                    Icon(Icons.edit_rounded, size: 14.w, color: AppColors.grey),
                   ],
                 ),
               ],
@@ -308,10 +317,7 @@ class _NotificationSettingsScreenState
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.notificationColor,
                 foregroundColor: Colors.white,
-                padding: EdgeInsets.symmetric(
-                  horizontal: 24.w,
-                  vertical: 14.h,
-                ),
+                padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 14.h),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12.r),
                 ),

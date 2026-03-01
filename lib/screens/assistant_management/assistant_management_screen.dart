@@ -39,7 +39,7 @@ class _AssistantManagementScreenState
     final assistantState = ref.watch(assistantsProvider);
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
         title: const Text('Assistant Management'),
         backgroundColor: AppColors.assistantColor,
@@ -49,13 +49,13 @@ class _AssistantManagementScreenState
       body: assistantState.isLoading
           ? const Center(child: CircularProgressIndicator())
           : assistantState.assistants.isEmpty
-              ? _buildEmptyState()
-              : ListView.builder(
-                  padding: EdgeInsets.all(24.w),
-                  itemCount: assistantState.assistants.length,
-                  itemBuilder: (context, index) =>
-                      _buildAssistantCard(assistantState.assistants[index]),
-                ),
+          ? _buildEmptyState()
+          : ListView.builder(
+              padding: EdgeInsets.all(24.w),
+              itemCount: assistantState.assistants.length,
+              itemBuilder: (context, index) =>
+                  _buildAssistantCard(assistantState.assistants[index]),
+            ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: _showAddAssistantSheet,
         label: const Text('Add Assistant'),
@@ -71,11 +71,15 @@ class _AssistantManagementScreenState
       margin: EdgeInsets.only(bottom: 16.h),
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).brightness == Brightness.dark
+            ? AppColors.darkCard
+            : Colors.white,
         borderRadius: BorderRadius.circular(16.r),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: Theme.of(context).brightness == Brightness.dark
+                ? Colors.transparent
+                : Colors.black.withOpacity(0.04),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -103,10 +107,14 @@ class _AssistantManagementScreenState
                 Text(
                   assistant.name,
                   style: AppTextStyles.bodyText
+                      .adaptive(context)
                       .copyWith(fontWeight: FontWeight.bold),
                 ),
                 SizedBox(height: 2.h),
-                Text(assistant.email, style: AppTextStyles.caption),
+                Text(
+                  assistant.email,
+                  style: AppTextStyles.caption.adaptive(context),
+                ),
                 SizedBox(height: 4.h),
                 Container(
                   padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 2.h),
@@ -127,11 +135,19 @@ class _AssistantManagementScreenState
             ),
           ),
           IconButton(
-            icon: Icon(Icons.edit_rounded, color: AppColors.primary, size: 20.w),
+            icon: Icon(
+              Icons.edit_rounded,
+              color: AppColors.primary,
+              size: 20.w,
+            ),
             onPressed: () => _showEditAssistantDialog(assistant),
           ),
           IconButton(
-            icon: Icon(Icons.delete_rounded, color: AppColors.error, size: 20.w),
+            icon: Icon(
+              Icons.delete_rounded,
+              color: AppColors.error,
+              size: 20.w,
+            ),
             onPressed: () => _confirmDelete(assistant),
           ),
         ],

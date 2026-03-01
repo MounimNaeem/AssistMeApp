@@ -48,7 +48,7 @@ class _AddExerciseScreenState extends State<AddExerciseScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
         backgroundColor: AppColors.gymColor,
         surfaceTintColor: Colors.transparent,
@@ -148,7 +148,9 @@ class _AddExerciseScreenState extends State<AddExerciseScreen> {
             label,
             style: AppTextStyles.caption.copyWith(
               fontWeight: FontWeight.w600,
-              color: AppColors.onBackground.withValues(alpha: 0.7),
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? AppColors.darkOnBackground.withValues(alpha: 0.7)
+                  : AppColors.onBackground.withValues(alpha: 0.7),
             ),
           ),
         ),
@@ -157,21 +159,31 @@ class _AddExerciseScreenState extends State<AddExerciseScreen> {
           width: double.infinity,
           padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 4.h),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: Theme.of(context).brightness == Brightness.dark
+                ? AppColors.darkCard
+                : Colors.white,
             borderRadius: BorderRadius.circular(16.r),
-            border: Border.all(color: AppColors.lightGrey),
+            border: Border.all(
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? AppColors.darkLightGrey
+                  : AppColors.lightGrey,
+            ),
           ),
           child: DropdownButtonHideUnderline(
             child: DropdownButton<String>(
               value: value,
-              hint: hint != null ? Text(hint, style: AppTextStyles.bodyText.copyWith(color: AppColors.grey)) : null,
+              hint: hint != null
+                  ? Text(
+                      hint,
+                      style: AppTextStyles.bodyText.copyWith(
+                        color: AppColors.grey,
+                      ),
+                    )
+                  : null,
               isExpanded: true,
               icon: const Icon(Icons.arrow_drop_down_rounded),
               items: items.map((item) {
-                return DropdownMenuItem(
-                  value: item,
-                  child: Text(item),
-                );
+                return DropdownMenuItem(value: item, child: Text(item));
               }).toList(),
               onChanged: onChanged,
             ),
@@ -191,7 +203,9 @@ class _AddExerciseScreenState extends State<AddExerciseScreen> {
             'Exercise Type',
             style: AppTextStyles.caption.copyWith(
               fontWeight: FontWeight.w600,
-              color: AppColors.onBackground.withValues(alpha: 0.7),
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? AppColors.darkOnBackground.withValues(alpha: 0.7)
+                  : AppColors.onBackground.withValues(alpha: 0.7),
             ),
           ),
         ),
@@ -200,9 +214,15 @@ class _AddExerciseScreenState extends State<AddExerciseScreen> {
           width: double.infinity,
           padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 4.h),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: Theme.of(context).brightness == Brightness.dark
+                ? AppColors.darkCard
+                : Colors.white,
             borderRadius: BorderRadius.circular(16.r),
-            border: Border.all(color: AppColors.lightGrey),
+            border: Border.all(
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? AppColors.darkLightGrey
+                  : AppColors.lightGrey,
+            ),
           ),
           child: DropdownButtonHideUnderline(
             child: DropdownButton<String>(

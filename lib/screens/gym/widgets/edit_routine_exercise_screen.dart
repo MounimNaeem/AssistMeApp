@@ -11,7 +11,8 @@ class EditRoutineExerciseScreen extends StatefulWidget {
   const EditRoutineExerciseScreen({super.key, required this.exercise});
 
   @override
-  State<EditRoutineExerciseScreen> createState() => _EditRoutineExerciseScreenState();
+  State<EditRoutineExerciseScreen> createState() =>
+      _EditRoutineExerciseScreenState();
 }
 
 class _EditRoutineExerciseScreenState extends State<EditRoutineExerciseScreen> {
@@ -22,8 +23,12 @@ class _EditRoutineExerciseScreenState extends State<EditRoutineExerciseScreen> {
   @override
   void initState() {
     super.initState();
-    _setsController = TextEditingController(text: widget.exercise.plannedSets.toString());
-    _warmUpSetsController = TextEditingController(text: widget.exercise.warmUpSets.toString());
+    _setsController = TextEditingController(
+      text: widget.exercise.plannedSets.toString(),
+    );
+    _warmUpSetsController = TextEditingController(
+      text: widget.exercise.warmUpSets.toString(),
+    );
     _notesController = TextEditingController(text: widget.exercise.notes);
   }
 
@@ -36,8 +41,10 @@ class _EditRoutineExerciseScreenState extends State<EditRoutineExerciseScreen> {
   }
 
   void _handleUpdate() {
-    final sets = int.tryParse(_setsController.text) ?? widget.exercise.plannedSets;
-    final warmUpSets = int.tryParse(_warmUpSetsController.text) ?? widget.exercise.warmUpSets;
+    final sets =
+        int.tryParse(_setsController.text) ?? widget.exercise.plannedSets;
+    final warmUpSets =
+        int.tryParse(_warmUpSetsController.text) ?? widget.exercise.warmUpSets;
 
     final updatedExercise = widget.exercise.copyWith(
       plannedSets: sets,
@@ -61,7 +68,9 @@ class _EditRoutineExerciseScreenState extends State<EditRoutineExerciseScreen> {
       context: context,
       builder: (ctx) => AlertDialog(
         title: const Text('Delete Exercise'),
-        content: Text('Are you sure you want to delete "${widget.exercise.exerciseName}"?'),
+        content: Text(
+          'Are you sure you want to delete "${widget.exercise.exerciseName}"?',
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
@@ -72,7 +81,10 @@ class _EditRoutineExerciseScreenState extends State<EditRoutineExerciseScreen> {
               Navigator.pop(ctx);
               Navigator.pop(context, null); // Return null to indicate deletion
             },
-            child: const Text('Delete', style: TextStyle(color: AppColors.error)),
+            child: const Text(
+              'Delete',
+              style: TextStyle(color: AppColors.error),
+            ),
           ),
         ],
       ),
@@ -82,7 +94,7 @@ class _EditRoutineExerciseScreenState extends State<EditRoutineExerciseScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
         backgroundColor: AppColors.gymColor,
         surfaceTintColor: Colors.transparent,
@@ -110,11 +122,15 @@ class _EditRoutineExerciseScreenState extends State<EditRoutineExerciseScreen> {
               width: double.infinity,
               padding: EdgeInsets.all(20.w),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? AppColors.darkCard
+                    : Colors.white,
                 borderRadius: BorderRadius.circular(20.r),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.04),
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? Colors.transparent
+                        : Colors.black.withValues(alpha: 0.04),
                     blurRadius: 20,
                     offset: const Offset(0, 10),
                   ),

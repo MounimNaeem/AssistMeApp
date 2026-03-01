@@ -104,7 +104,7 @@ class _AddLogScreenState extends ConsumerState<AddLogScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
         backgroundColor: AppColors.gymColor,
         surfaceTintColor: Colors.transparent,
@@ -144,7 +144,9 @@ class _AddLogScreenState extends ConsumerState<AddLogScreen> {
             // Exercises Section
             Text(
               'Exercises',
-              style: AppTextStyles.heading2.copyWith(fontSize: 18.sp),
+              style: AppTextStyles.heading2
+                  .adaptive(context)
+                  .copyWith(fontSize: 18.sp),
             ),
             SizedBox(height: 12.h),
 
@@ -182,9 +184,9 @@ class _AddLogScreenState extends ConsumerState<AddLogScreen> {
                             children: [
                               Text(
                                 ex.exerciseName,
-                                style: AppTextStyles.bodyText.copyWith(
-                                  fontWeight: FontWeight.w600,
-                                ),
+                                style: AppTextStyles.bodyText
+                                    .adaptive(context)
+                                    .copyWith(fontWeight: FontWeight.w600),
                               ),
                               SizedBox(height: 4.h),
                               Text(
@@ -361,7 +363,7 @@ class _AddLogExerciseSheetState extends State<_AddLogExerciseSheet> {
     return Container(
       margin: EdgeInsets.only(top: 60.h),
       decoration: BoxDecoration(
-        color: AppColors.background,
+        color: Theme.of(context).scaffoldBackgroundColor,
         borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
       ),
       child: Column(
@@ -395,7 +397,9 @@ class _AddLogExerciseSheetState extends State<_AddLogExerciseSheet> {
                 ),
                 Text(
                   widget.exercise != null ? 'Edit Exercise' : 'Add Exercise',
-                  style: AppTextStyles.heading2.copyWith(fontSize: 18.sp),
+                  style: AppTextStyles.heading2
+                      .adaptive(context)
+                      .copyWith(fontSize: 18.sp),
                 ),
                 TextButton(
                   onPressed: _handleSave,
@@ -467,7 +471,9 @@ class _AddLogExerciseSheetState extends State<_AddLogExerciseSheet> {
                     children: [
                       Text(
                         'Sets',
-                        style: AppTextStyles.heading2.copyWith(fontSize: 16.sp),
+                        style: AppTextStyles.heading2
+                            .adaptive(context)
+                            .copyWith(fontSize: 16.sp),
                       ),
                       TextButton.icon(
                         onPressed: _addSet,
@@ -667,9 +673,15 @@ class _NumberInputFieldState extends State<_NumberInputField> {
     return Container(
       height: 44.h,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).brightness == Brightness.dark
+            ? AppColors.darkCard
+            : Colors.white,
         borderRadius: BorderRadius.circular(8.r),
-        border: Border.all(color: AppColors.lightGrey),
+        border: Border.all(
+          color: Theme.of(context).brightness == Brightness.dark
+              ? AppColors.darkLightGrey
+              : AppColors.lightGrey,
+        ),
       ),
       child: Row(
         children: [
@@ -680,9 +692,9 @@ class _NumberInputFieldState extends State<_NumberInputField> {
                 decimal: widget.isDecimal,
               ),
               textAlign: TextAlign.center,
-              style: AppTextStyles.bodyText.copyWith(
-                fontWeight: FontWeight.w600,
-              ),
+              style: AppTextStyles.bodyText
+                  .adaptive(context)
+                  .copyWith(fontWeight: FontWeight.w600),
               decoration: const InputDecoration(
                 border: InputBorder.none,
                 contentPadding: EdgeInsets.zero,

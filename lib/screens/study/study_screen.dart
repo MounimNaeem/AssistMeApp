@@ -45,7 +45,7 @@ class _StudyScreenState extends ConsumerState<StudyScreen> {
       ..sort((a, b) => a.compareTo(b)); // Sort dates ascending
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
         title: Text(
           'Study Tasks',
@@ -89,9 +89,9 @@ class _StudyScreenState extends ConsumerState<StudyScreen> {
                         children: [
                           Text(
                             displayDate,
-                            style: AppTextStyles.heading2.copyWith(
-                              fontSize: 18.sp,
-                            ),
+                            style: AppTextStyles.heading2
+                                .adaptive(context)
+                                .copyWith(fontSize: 18.sp),
                           ),
                           Container(
                             padding: EdgeInsets.symmetric(
@@ -246,11 +246,15 @@ class _StudyTaskCardState extends State<_StudyTaskCard> {
       margin: EdgeInsets.only(bottom: 12.h),
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).brightness == Brightness.dark
+            ? AppColors.darkCard
+            : Colors.white,
         borderRadius: BorderRadius.circular(16.r),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.04),
+            color: Theme.of(context).brightness == Brightness.dark
+                ? Colors.transparent
+                : Colors.black.withValues(alpha: 0.04),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -276,15 +280,20 @@ class _StudyTaskCardState extends State<_StudyTaskCard> {
                   children: [
                     Text(
                       task.taskName,
-                      style: AppTextStyles.bodyText.copyWith(
-                        fontWeight: FontWeight.w600,
-                        decoration: task.completed
-                            ? TextDecoration.lineThrough
-                            : null,
-                        color: task.completed
-                            ? AppColors.grey
-                            : AppColors.onBackground,
-                      ),
+                      style: AppTextStyles.bodyText
+                          .adaptive(context)
+                          .copyWith(
+                            fontWeight: FontWeight.w600,
+                            decoration: task.completed
+                                ? TextDecoration.lineThrough
+                                : null,
+                            color: task.completed
+                                ? AppColors.grey
+                                : (Theme.of(context).brightness ==
+                                          Brightness.dark
+                                      ? AppColors.darkOnBackground
+                                      : AppColors.onBackground),
+                          ),
                     ),
                     if (hasDetails) ...[
                       SizedBox(height: 8.h),

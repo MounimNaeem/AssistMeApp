@@ -37,12 +37,25 @@ class CustomTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final fillColor = isDark ? AppColors.darkCard : Colors.white;
+    final borderColor = isDark ? AppColors.darkLightGrey : AppColors.lightGrey;
+    final labelColor = isDark
+        ? AppColors.darkOnBackground.withOpacity(0.7)
+        : AppColors.onBackground.withOpacity(0.7);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
           padding: EdgeInsets.only(left: 4.w),
-          child: Text(label, style: AppTextStyles.caption.copyWith(fontWeight: FontWeight.w600, color: AppColors.onBackground.withOpacity(0.7))),
+          child: Text(
+            label,
+            style: AppTextStyles.caption.copyWith(
+              fontWeight: FontWeight.w600,
+              color: labelColor,
+            ),
+          ),
         ),
         SizedBox(height: 8.h),
         TextFormField(
@@ -51,29 +64,46 @@ class CustomTextField extends StatelessWidget {
           keyboardType: keyboardType,
           validator: validator,
           onChanged: onChanged,
-          style: AppTextStyles.bodyText,
+          style: AppTextStyles.bodyText.adaptive(context),
           maxLines: maxLines,
           minLines: minLines,
           decoration: InputDecoration(
             hintText: hint,
-            hintStyle: AppTextStyles.bodyText.copyWith(color: AppColors.grey),
+            hintStyle: AppTextStyles.bodyText.copyWith(
+              color: isDark ? AppColors.darkGrey : AppColors.grey,
+            ),
             errorText: errorText,
-            prefixIcon: prefixIcon != null ? IconTheme(data: IconThemeData(color: AppColors.primary, size: 20.w), child: prefixIcon!) : null,
+            prefixIcon: prefixIcon != null
+                ? IconTheme(
+                    data: IconThemeData(
+                      color: isDark
+                          ? AppColors.primaryLight
+                          : AppColors.primary,
+                      size: 20.w,
+                    ),
+                    child: prefixIcon!,
+                  )
+                : null,
             suffixIcon: suffixIcon,
             filled: true,
-            fillColor: Colors.white,
-            contentPadding: contentPadding ?? EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
+            fillColor: fillColor,
+            contentPadding:
+                contentPadding ??
+                EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(16.r),
               borderSide: BorderSide.none,
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(16.r),
-              borderSide: BorderSide(color: AppColors.lightGrey, width: 1),
+              borderSide: BorderSide(color: borderColor, width: 1),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(16.r),
-              borderSide: BorderSide(color: AppColors.primary, width: 2),
+              borderSide: BorderSide(
+                color: isDark ? AppColors.primaryLight : AppColors.primary,
+                width: 2,
+              ),
             ),
             errorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(16.r),

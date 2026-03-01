@@ -106,7 +106,7 @@ class _AddDrillBottomSheetState extends ConsumerState<AddDrillBottomSheet> {
 
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.background,
+        color: Theme.of(context).scaffoldBackgroundColor,
         borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
       ),
       padding: EdgeInsets.only(
@@ -155,9 +155,9 @@ class _AddDrillBottomSheetState extends ConsumerState<AddDrillBottomSheet> {
                         children: [
                           Text(
                             isEditing ? 'Edit Drill' : 'Add New Drill',
-                            style: AppTextStyles.heading2.copyWith(
-                              fontSize: 20.sp,
-                            ),
+                            style: AppTextStyles.heading2
+                                .adaptive(context)
+                                .copyWith(fontSize: 20.sp),
                           ),
                           Text(
                             categoryName,

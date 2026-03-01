@@ -37,3 +37,21 @@ class AppTextStyles {
     letterSpacing: 0.5,
   );
 }
+
+/// Extension to adapt text styles to the current theme brightness.
+/// Usage: AppTextStyles.heading1.adaptive(context)
+extension AdaptiveTextStyle on TextStyle {
+  TextStyle adaptive(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    if (!isDark) return this;
+
+    // Map light text colors to dark equivalents
+    if (color == AppColors.onBackground || color == AppColors.onSurface) {
+      return copyWith(color: AppColors.darkOnBackground);
+    }
+    if (color == AppColors.grey) {
+      return copyWith(color: AppColors.darkGrey);
+    }
+    return this;
+  }
+}

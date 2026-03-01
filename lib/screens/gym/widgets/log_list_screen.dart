@@ -80,7 +80,9 @@ class _LogListItem extends ConsumerWidget {
       context: context,
       builder: (ctx) => AlertDialog(
         title: const Text('Delete Workout'),
-        content: Text('Are you sure you want to delete "${workout.routineName}" log?'),
+        content: Text(
+          'Are you sure you want to delete "${workout.routineName}" log?',
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
@@ -91,7 +93,10 @@ class _LogListItem extends ConsumerWidget {
               Navigator.pop(ctx);
               await ref.read(gymProvider).deleteWorkout(workout.id);
             },
-            child: const Text('Delete', style: TextStyle(color: AppColors.error)),
+            child: const Text(
+              'Delete',
+              style: TextStyle(color: AppColors.error),
+            ),
           ),
         ],
       ),
@@ -161,7 +166,10 @@ class _LogListItem extends ConsumerWidget {
                   ),
                 ),
               PopupMenuButton<String>(
-                icon: const Icon(Icons.more_vert_rounded, color: AppColors.grey),
+                icon: const Icon(
+                  Icons.more_vert_rounded,
+                  color: AppColors.grey,
+                ),
                 padding: EdgeInsets.zero,
                 onSelected: (value) {
                   if (value == 'delete') {
@@ -173,9 +181,16 @@ class _LogListItem extends ConsumerWidget {
                     value: 'delete',
                     child: Row(
                       children: [
-                        Icon(Icons.delete_outline_rounded, color: AppColors.error, size: 20),
+                        Icon(
+                          Icons.delete_outline_rounded,
+                          color: AppColors.error,
+                          size: 20,
+                        ),
                         SizedBox(width: 8),
-                        Text('Delete', style: TextStyle(color: AppColors.error)),
+                        Text(
+                          'Delete',
+                          style: TextStyle(color: AppColors.error),
+                        ),
                       ],
                     ),
                   ),
@@ -186,10 +201,9 @@ class _LogListItem extends ConsumerWidget {
           SizedBox(height: 8.h),
           Text(
             workout.routineName,
-            style: AppTextStyles.bodyText.copyWith(
-              fontWeight: FontWeight.w600,
-              fontSize: 16.sp,
-            ),
+            style: AppTextStyles.bodyText
+                .adaptive(context)
+                .copyWith(fontWeight: FontWeight.w600, fontSize: 16.sp),
           ),
           SizedBox(height: 4.h),
           Text(
@@ -203,16 +217,21 @@ class _LogListItem extends ConsumerWidget {
               runSpacing: 6.h,
               children: workout.exercises.take(4).map((ex) {
                 return Container(
-                  padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 10.w,
+                    vertical: 4.h,
+                  ),
                   decoration: BoxDecoration(
-                    color: AppColors.background,
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? AppColors.darkElevated
+                        : AppColors.background,
                     borderRadius: BorderRadius.circular(8.r),
                   ),
                   child: Text(
                     ex.exerciseName,
-                    style: AppTextStyles.caption.copyWith(
-                      fontSize: 11.sp,
-                    ),
+                    style: AppTextStyles.caption
+                        .adaptive(context)
+                        .copyWith(fontSize: 11.sp),
                   ),
                 );
               }).toList(),

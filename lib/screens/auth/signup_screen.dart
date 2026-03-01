@@ -54,7 +54,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
     final authState = ref.watch(authProvider);
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
@@ -67,13 +67,17 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                 children: [
                   Text(
                     'Create Account',
-                    style: AppTextStyles.heading1.copyWith(fontSize: 36.sp),
+                    style: AppTextStyles.heading1
+                        .adaptive(context)
+                        .copyWith(fontSize: 36.sp),
                     textAlign: TextAlign.center,
                   ),
                   SizedBox(height: 8.h),
                   Text(
                     'Join AssistMe and boost your productivity.',
-                    style: AppTextStyles.caption.copyWith(fontSize: 15.sp),
+                    style: AppTextStyles.caption
+                        .adaptive(context)
+                        .copyWith(fontSize: 15.sp),
                     textAlign: TextAlign.center,
                   ),
                   SizedBox(height: 48.h),
@@ -82,7 +86,8 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                     label: 'Full Name',
                     hint: 'John Doe',
                     prefixIcon: const Icon(Icons.person_rounded),
-                    validator: (val) => val == null || val.isEmpty ? 'Required' : null,
+                    validator: (val) =>
+                        val == null || val.isEmpty ? 'Required' : null,
                   ),
                   SizedBox(height: 20.h),
                   CustomTextField(
@@ -91,7 +96,8 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                     hint: 'hello@example.com',
                     prefixIcon: const Icon(Icons.email_rounded),
                     keyboardType: TextInputType.emailAddress,
-                    validator: (val) => val == null || val.isEmpty ? 'Required' : null,
+                    validator: (val) =>
+                        val == null || val.isEmpty ? 'Required' : null,
                   ),
                   SizedBox(height: 20.h),
                   CustomTextField(
@@ -101,10 +107,18 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                     obscureText: _obscurePassword,
                     prefixIcon: const Icon(Icons.lock_rounded),
                     suffixIcon: IconButton(
-                      icon: Icon(_obscurePassword ? Icons.visibility_off : Icons.visibility, color: AppColors.grey),
-                      onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
+                      icon: Icon(
+                        _obscurePassword
+                            ? Icons.visibility_off
+                            : Icons.visibility,
+                        color: AppColors.grey,
+                      ),
+                      onPressed: () =>
+                          setState(() => _obscurePassword = !_obscurePassword),
                     ),
-                    validator: (val) => val != null && val.length < 6 ? 'Min 6 characters' : null,
+                    validator: (val) => val != null && val.length < 6
+                        ? 'Min 6 characters'
+                        : null,
                   ),
                   SizedBox(height: 20.h),
                   CustomTextField(
@@ -114,10 +128,20 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                     obscureText: _obscureConfirmPassword,
                     prefixIcon: const Icon(Icons.lock_clock_rounded),
                     suffixIcon: IconButton(
-                      icon: Icon(_obscureConfirmPassword ? Icons.visibility_off : Icons.visibility, color: AppColors.grey),
-                      onPressed: () => setState(() => _obscureConfirmPassword = !_obscureConfirmPassword),
+                      icon: Icon(
+                        _obscureConfirmPassword
+                            ? Icons.visibility_off
+                            : Icons.visibility,
+                        color: AppColors.grey,
+                      ),
+                      onPressed: () => setState(
+                        () =>
+                            _obscureConfirmPassword = !_obscureConfirmPassword,
+                      ),
                     ),
-                    validator: (val) => val != _passwordController.text ? 'Passwords do not match' : null,
+                    validator: (val) => val != _passwordController.text
+                        ? 'Passwords do not match'
+                        : null,
                   ),
                   SizedBox(height: 32.h),
                   if (authState.errorMessage != null) ...[
@@ -129,7 +153,10 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                       ),
                       child: Text(
                         authState.errorMessage!,
-                        style: AppTextStyles.caption.copyWith(color: AppColors.error, fontWeight: FontWeight.w500),
+                        style: AppTextStyles.caption.copyWith(
+                          color: AppColors.error,
+                          fontWeight: FontWeight.w500,
+                        ),
                         textAlign: TextAlign.center,
                       ),
                     ),
@@ -144,7 +171,12 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text("Already have an account? ", style: AppTextStyles.bodyText.copyWith(color: AppColors.grey)),
+                      Text(
+                        "Already have an account? ",
+                        style: AppTextStyles.bodyText
+                            .adaptive(context)
+                            .copyWith(color: AppColors.grey),
+                      ),
                       GestureDetector(
                         onTap: () => Navigator.pop(context),
                         child: Text(

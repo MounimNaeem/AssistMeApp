@@ -40,15 +40,18 @@ class _FoodScreenState extends ConsumerState<FoodScreen> {
   }
 
   Widget _buildAvgCaloriesHeader(int avgCalories, Map<String, int> avgMacros) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       margin: EdgeInsets.fromLTRB(20.w, 20.h, 20.w, 8.h),
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? AppColors.darkCard : Colors.white,
         borderRadius: BorderRadius.circular(16.r),
         boxShadow: [
           BoxShadow(
-            color: AppColors.success.withValues(alpha: 0.1),
+            color: isDark
+                ? Colors.transparent
+                : AppColors.success.withValues(alpha: 0.1),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -130,10 +133,9 @@ class _FoodScreenState extends ConsumerState<FoodScreen> {
           SizedBox(width: 4.w),
           Text(
             '${value}g',
-            style: AppTextStyles.bodyText.copyWith(
-              fontWeight: FontWeight.w700,
-              fontSize: 13.sp,
-            ),
+            style: AppTextStyles.bodyText
+                .adaptive(context)
+                .copyWith(fontWeight: FontWeight.w700, fontSize: 13.sp),
           ),
         ],
       ),
@@ -181,7 +183,7 @@ class _FoodScreenState extends ConsumerState<FoodScreen> {
       ..sort((a, b) => b.compareTo(a));
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
         title: Text(
           'Nutrition Log',
@@ -232,9 +234,9 @@ class _FoodScreenState extends ConsumerState<FoodScreen> {
                                   children: [
                                     Text(
                                       displayDate,
-                                      style: AppTextStyles.heading2.copyWith(
-                                        fontSize: 18.sp,
-                                      ),
+                                      style: AppTextStyles.heading2
+                                          .adaptive(context)
+                                          .copyWith(fontSize: 18.sp),
                                     ),
                                     Container(
                                       padding: EdgeInsets.symmetric(

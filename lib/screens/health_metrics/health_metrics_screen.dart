@@ -13,7 +13,8 @@ class HealthMetricsScreen extends ConsumerStatefulWidget {
   const HealthMetricsScreen({super.key});
 
   @override
-  ConsumerState<HealthMetricsScreen> createState() => _HealthMetricsScreenState();
+  ConsumerState<HealthMetricsScreen> createState() =>
+      _HealthMetricsScreenState();
 }
 
 class _HealthMetricsScreenState extends ConsumerState<HealthMetricsScreen> {
@@ -46,11 +47,15 @@ class _HealthMetricsScreenState extends ConsumerState<HealthMetricsScreen> {
       margin: EdgeInsets.fromLTRB(20.w, 20.h, 20.w, 8.h),
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).brightness == Brightness.dark
+            ? AppColors.darkCard
+            : Colors.white,
         borderRadius: BorderRadius.circular(16.r),
         boxShadow: [
           BoxShadow(
-            color: AppColors.healthMetricsColor.withValues(alpha: 0.1),
+            color: Theme.of(context).brightness == Brightness.dark
+                ? Colors.transparent
+                : AppColors.healthMetricsColor.withValues(alpha: 0.1),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -104,28 +109,57 @@ class _HealthMetricsScreenState extends ConsumerState<HealthMetricsScreen> {
   Widget _buildMetricsGrid(dynamic latest) {
     final metrics = [
       if (latest.weight != null)
-        {'label': 'Weight', 'value': '${latest.weight} kg', 'icon': Icons.monitor_weight_rounded},
+        {
+          'label': 'Weight',
+          'value': '${latest.weight} kg',
+          'icon': Icons.monitor_weight_rounded,
+        },
       if (latest.height != null)
-        {'label': 'Height', 'value': '${latest.height} cm', 'icon': Icons.height_rounded},
+        {
+          'label': 'Height',
+          'value': '${latest.height} cm',
+          'icon': Icons.height_rounded,
+        },
       if (latest.bmi != null)
-        {'label': 'BMI', 'value': '${latest.bmi}', 'icon': Icons.health_and_safety_rounded},
+        {
+          'label': 'BMI',
+          'value': '${latest.bmi}',
+          'icon': Icons.health_and_safety_rounded,
+        },
       if (latest.biceps != null)
-        {'label': 'Biceps', 'value': '${latest.biceps} cm', 'icon': Icons.fitness_center_rounded},
+        {
+          'label': 'Biceps',
+          'value': '${latest.biceps} cm',
+          'icon': Icons.fitness_center_rounded,
+        },
       if (latest.waist != null)
-        {'label': 'Waist', 'value': '${latest.waist} cm', 'icon': Icons.accessibility_new_rounded},
+        {
+          'label': 'Waist',
+          'value': '${latest.waist} cm',
+          'icon': Icons.accessibility_new_rounded,
+        },
       if (latest.bodyFat != null)
-        {'label': 'Body Fat', 'value': '${latest.bodyFat}%', 'icon': Icons.percent_rounded},
+        {
+          'label': 'Body Fat',
+          'value': '${latest.bodyFat}%',
+          'icon': Icons.percent_rounded,
+        },
       if (latest.muscleMass != null)
-        {'label': 'Muscle', 'value': '${latest.muscleMass} kg', 'icon': Icons.bolt_rounded},
+        {
+          'label': 'Muscle',
+          'value': '${latest.muscleMass} kg',
+          'icon': Icons.bolt_rounded,
+        },
       if (latest.calorieGoal != null)
-        {'label': 'Cal Goal', 'value': '${latest.calorieGoal} kcal', 'icon': Icons.local_fire_department_rounded},
+        {
+          'label': 'Cal Goal',
+          'value': '${latest.calorieGoal} kcal',
+          'icon': Icons.local_fire_department_rounded,
+        },
     ];
 
     if (metrics.isEmpty) {
-      return Text(
-        'No measurements recorded',
-        style: AppTextStyles.caption,
-      );
+      return Text('No measurements recorded', style: AppTextStyles.caption);
     }
 
     return Wrap(
@@ -135,7 +169,9 @@ class _HealthMetricsScreenState extends ConsumerState<HealthMetricsScreen> {
         return Container(
           padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
           decoration: BoxDecoration(
-            color: AppColors.background,
+            color: Theme.of(context).brightness == Brightness.dark
+                ? AppColors.darkElevated
+                : AppColors.background,
             borderRadius: BorderRadius.circular(12.r),
           ),
           child: Row(
@@ -152,16 +188,13 @@ class _HealthMetricsScreenState extends ConsumerState<HealthMetricsScreen> {
                 children: [
                   Text(
                     metric['value'] as String,
-                    style: AppTextStyles.bodyText.copyWith(
-                      fontWeight: FontWeight.w700,
-                      fontSize: 12.sp,
-                    ),
+                    style: AppTextStyles.bodyText
+                        .adaptive(context)
+                        .copyWith(fontWeight: FontWeight.w700, fontSize: 12.sp),
                   ),
                   Text(
                     metric['label'] as String,
-                    style: AppTextStyles.caption.copyWith(
-                      fontSize: 9.sp,
-                    ),
+                    style: AppTextStyles.caption.copyWith(fontSize: 9.sp),
                   ),
                 ],
               ),
@@ -174,9 +207,9 @@ class _HealthMetricsScreenState extends ConsumerState<HealthMetricsScreen> {
 
   String _formatDate(String date) {
     final today = DateFormat('yyyy-MM-dd').format(DateTime.now());
-    final yesterday = DateFormat('yyyy-MM-dd').format(
-      DateTime.now().subtract(const Duration(days: 1)),
-    );
+    final yesterday = DateFormat(
+      'yyyy-MM-dd',
+    ).format(DateTime.now().subtract(const Duration(days: 1)));
 
     if (date == today) return 'Today';
     if (date == yesterday) return 'Yesterday';
@@ -189,9 +222,9 @@ class _HealthMetricsScreenState extends ConsumerState<HealthMetricsScreen> {
 
   String _getDisplayDate(String date) {
     final today = DateFormat('yyyy-MM-dd').format(DateTime.now());
-    final yesterday = DateFormat('yyyy-MM-dd').format(
-      DateTime.now().subtract(const Duration(days: 1)),
-    );
+    final yesterday = DateFormat(
+      'yyyy-MM-dd',
+    ).format(DateTime.now().subtract(const Duration(days: 1)));
 
     if (date == today) return 'Today';
     if (date == yesterday) return 'Yesterday';
@@ -209,7 +242,7 @@ class _HealthMetricsScreenState extends ConsumerState<HealthMetricsScreen> {
       ..sort((a, b) => b.compareTo(a));
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
         title: Text(
           'Health Metrics',
@@ -221,42 +254,44 @@ class _HealthMetricsScreenState extends ConsumerState<HealthMetricsScreen> {
       body: metricsState.isLoading && metricsState.metricsByDate.isEmpty
           ? const LoadingIndicator(message: 'Loading your metrics...')
           : metricsState.metricsByDate.isEmpty
-              ? _buildEmptyState()
-              : Column(
-                  children: [
-                    _buildLatestMetricsHeader(),
-                    Expanded(
-                      child: ListView.builder(
-                        padding: EdgeInsets.fromLTRB(20.w, 12.h, 20.w, 100.h),
-                        itemCount: sortedDates.length,
-                        itemBuilder: (context, index) {
-                          final date = sortedDates[index];
-                          final metrics = metricsState.metricsByDate[date]!;
+          ? _buildEmptyState()
+          : Column(
+              children: [
+                _buildLatestMetricsHeader(),
+                Expanded(
+                  child: ListView.builder(
+                    padding: EdgeInsets.fromLTRB(20.w, 12.h, 20.w, 100.h),
+                    itemCount: sortedDates.length,
+                    itemBuilder: (context, index) {
+                      final date = sortedDates[index];
+                      final metrics = metricsState.metricsByDate[date]!;
 
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                padding: EdgeInsets.symmetric(
-                                  vertical: 16.h,
-                                  horizontal: 8.w,
-                                ),
-                                child: Text(
-                                  _getDisplayDate(date),
-                                  style: AppTextStyles.heading2.copyWith(
-                                    fontSize: 18.sp,
-                                  ),
-                                ),
-                              ),
-                              ...metrics.map((metric) => HealthMetricsCard(metrics: metric)),
-                              SizedBox(height: 12.h),
-                            ],
-                          );
-                        },
-                      ),
-                    ),
-                  ],
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            padding: EdgeInsets.symmetric(
+                              vertical: 16.h,
+                              horizontal: 8.w,
+                            ),
+                            child: Text(
+                              _getDisplayDate(date),
+                              style: AppTextStyles.heading2
+                                  .adaptive(context)
+                                  .copyWith(fontSize: 18.sp),
+                            ),
+                          ),
+                          ...metrics.map(
+                            (metric) => HealthMetricsCard(metrics: metric),
+                          ),
+                          SizedBox(height: 12.h),
+                        ],
+                      );
+                    },
+                  ),
                 ),
+              ],
+            ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: _showAddMetricsSheet,
         label: Text(

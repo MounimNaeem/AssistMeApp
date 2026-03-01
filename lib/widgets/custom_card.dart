@@ -20,20 +20,24 @@ class CustomCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final cardColor =
+        color ?? (isDark ? AppColors.darkCard : AppColors.surface);
+
     return Container(
       margin: margin,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20.r),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: isDark ? Colors.transparent : Colors.black.withOpacity(0.04),
             blurRadius: 20,
             offset: const Offset(0, 10),
           ),
         ],
       ),
       child: Material(
-        color: color ?? AppColors.surface,
+        color: cardColor,
         borderRadius: BorderRadius.circular(20.r),
         clipBehavior: Clip.antiAlias,
         child: InkWell(

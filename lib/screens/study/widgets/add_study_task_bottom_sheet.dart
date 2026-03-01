@@ -109,8 +109,9 @@ class _AddStudyTaskBottomSheetState
       final dateStr = DateFormat('yyyy-MM-dd').format(_selectedDate);
 
       // Get Quill content
-      final deltaJson =
-          jsonEncode(_quillController.document.toDelta().toJson());
+      final deltaJson = jsonEncode(
+        _quillController.document.toDelta().toJson(),
+      );
       final plainText = _quillController.document.toPlainText().trim();
 
       final task = StudyTaskModel(
@@ -144,7 +145,7 @@ class _AddStudyTaskBottomSheetState
         maxHeight: MediaQuery.of(context).size.height * 0.85,
       ),
       decoration: BoxDecoration(
-        color: AppColors.background,
+        color: Theme.of(context).scaffoldBackgroundColor,
         borderRadius: BorderRadius.vertical(top: Radius.circular(32.r)),
       ),
       padding: EdgeInsets.only(
@@ -211,25 +212,36 @@ class _AddStudyTaskBottomSheetState
             'Details (Optional)',
             style: AppTextStyles.caption.copyWith(
               fontWeight: FontWeight.w600,
-              color: AppColors.onBackground.withOpacity(0.7),
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? AppColors.darkOnBackground.withOpacity(0.7)
+                  : AppColors.onBackground.withOpacity(0.7),
             ),
           ),
         ),
         SizedBox(height: 8.h),
         Container(
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: Theme.of(context).brightness == Brightness.dark
+                ? AppColors.darkCard
+                : Colors.white,
             borderRadius: BorderRadius.circular(16.r),
-            border: Border.all(color: AppColors.lightGrey),
+            border: Border.all(
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? AppColors.darkLightGrey
+                  : AppColors.lightGrey,
+            ),
           ),
           child: Column(
             children: [
               // Toolbar
               Container(
                 decoration: BoxDecoration(
-                  color: AppColors.background,
-                  borderRadius:
-                      BorderRadius.vertical(top: Radius.circular(16.r)),
+                  color: Theme.of(context).brightness == Brightness.dark
+                      ? AppColors.darkElevated
+                      : AppColors.background,
+                  borderRadius: BorderRadius.vertical(
+                    top: Radius.circular(16.r),
+                  ),
                 ),
                 child: QuillSimpleToolbar(
                   controller: _quillController,
@@ -268,7 +280,12 @@ class _AddStudyTaskBottomSheetState
                   ),
                 ),
               ),
-              Divider(height: 1, color: AppColors.lightGrey),
+              Divider(
+                height: 1,
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? AppColors.darkLightGrey
+                    : AppColors.lightGrey,
+              ),
               // Editor
               Container(
                 height: 150.h,
@@ -299,7 +316,9 @@ class _AddStudyTaskBottomSheetState
             'Date',
             style: AppTextStyles.caption.copyWith(
               fontWeight: FontWeight.w600,
-              color: AppColors.onBackground.withOpacity(0.7),
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? AppColors.darkOnBackground.withOpacity(0.7)
+                  : AppColors.onBackground.withOpacity(0.7),
             ),
           ),
         ),
@@ -311,9 +330,15 @@ class _AddStudyTaskBottomSheetState
             width: double.infinity,
             padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? AppColors.darkCard
+                  : Colors.white,
               borderRadius: BorderRadius.circular(16.r),
-              border: Border.all(color: AppColors.lightGrey),
+              border: Border.all(
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? AppColors.darkLightGrey
+                    : AppColors.lightGrey,
+              ),
             ),
             child: Row(
               children: [
@@ -325,7 +350,7 @@ class _AddStudyTaskBottomSheetState
                 SizedBox(width: 12.w),
                 Text(
                   DateFormat('EEEE, MMM d, yyyy').format(_selectedDate),
-                  style: AppTextStyles.bodyText,
+                  style: AppTextStyles.bodyText.adaptive(context),
                 ),
                 const Spacer(),
                 Icon(

@@ -15,14 +15,17 @@ class HealthMetricsCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       margin: EdgeInsets.only(bottom: 12.h),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? AppColors.darkCard : Colors.white,
         borderRadius: BorderRadius.circular(16.r),
         boxShadow: [
           BoxShadow(
-            color: AppColors.healthMetricsColor.withValues(alpha: 0.08),
+            color: isDark
+                ? Colors.transparent
+                : AppColors.healthMetricsColor.withValues(alpha: 0.08),
             blurRadius: 12,
             offset: const Offset(0, 4),
           ),
@@ -47,7 +50,9 @@ class HealthMetricsCard extends ConsumerWidget {
                         Container(
                           padding: EdgeInsets.all(8.w),
                           decoration: BoxDecoration(
-                            color: AppColors.healthMetricsColor.withValues(alpha: 0.1),
+                            color: AppColors.healthMetricsColor.withValues(
+                              alpha: 0.1,
+                            ),
                             borderRadius: BorderRadius.circular(10.r),
                           ),
                           child: Icon(
@@ -97,7 +102,7 @@ class HealthMetricsCard extends ConsumerWidget {
                 Wrap(
                   spacing: 16.w,
                   runSpacing: 8.h,
-                  children: _buildMetricChips(),
+                  children: _buildMetricChips(isDark),
                 ),
               ],
             ),
@@ -107,42 +112,98 @@ class HealthMetricsCard extends ConsumerWidget {
     );
   }
 
-  List<Widget> _buildMetricChips() {
+  List<Widget> _buildMetricChips(bool isDark) {
     final chips = <Widget>[];
 
     if (metrics.weight != null) {
-      chips.add(_buildChip('Weight', '${metrics.weight} kg', Icons.monitor_weight_rounded));
+      chips.add(
+        _buildChip(
+          'Weight',
+          '${metrics.weight} kg',
+          Icons.monitor_weight_rounded,
+          isDark,
+        ),
+      );
     }
     if (metrics.height != null) {
-      chips.add(_buildChip('Height', '${metrics.height} cm', Icons.height_rounded));
+      chips.add(
+        _buildChip(
+          'Height',
+          '${metrics.height} cm',
+          Icons.height_rounded,
+          isDark,
+        ),
+      );
     }
     if (metrics.bmi != null) {
-      chips.add(_buildChip('BMI', '${metrics.bmi}', Icons.health_and_safety_rounded));
+      chips.add(
+        _buildChip(
+          'BMI',
+          '${metrics.bmi}',
+          Icons.health_and_safety_rounded,
+          isDark,
+        ),
+      );
     }
     if (metrics.biceps != null) {
-      chips.add(_buildChip('Biceps', '${metrics.biceps} cm', Icons.fitness_center_rounded));
+      chips.add(
+        _buildChip(
+          'Biceps',
+          '${metrics.biceps} cm',
+          Icons.fitness_center_rounded,
+          isDark,
+        ),
+      );
     }
     if (metrics.waist != null) {
-      chips.add(_buildChip('Waist', '${metrics.waist} cm', Icons.accessibility_new_rounded));
+      chips.add(
+        _buildChip(
+          'Waist',
+          '${metrics.waist} cm',
+          Icons.accessibility_new_rounded,
+          isDark,
+        ),
+      );
     }
     if (metrics.bodyFat != null) {
-      chips.add(_buildChip('Body Fat', '${metrics.bodyFat}%', Icons.percent_rounded));
+      chips.add(
+        _buildChip(
+          'Body Fat',
+          '${metrics.bodyFat}%',
+          Icons.percent_rounded,
+          isDark,
+        ),
+      );
     }
     if (metrics.muscleMass != null) {
-      chips.add(_buildChip('Muscle', '${metrics.muscleMass} kg', Icons.bolt_rounded));
+      chips.add(
+        _buildChip(
+          'Muscle',
+          '${metrics.muscleMass} kg',
+          Icons.bolt_rounded,
+          isDark,
+        ),
+      );
     }
     if (metrics.calorieGoal != null) {
-      chips.add(_buildChip('Cal Goal', '${metrics.calorieGoal} kcal', Icons.local_fire_department_rounded));
+      chips.add(
+        _buildChip(
+          'Cal Goal',
+          '${metrics.calorieGoal} kcal',
+          Icons.local_fire_department_rounded,
+          isDark,
+        ),
+      );
     }
 
     return chips;
   }
 
-  Widget _buildChip(String label, String value, IconData icon) {
+  Widget _buildChip(String label, String value, IconData icon, bool isDark) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
       decoration: BoxDecoration(
-        color: AppColors.background,
+        color: isDark ? AppColors.darkElevated : AppColors.background,
         borderRadius: BorderRadius.circular(8.r),
       ),
       child: Row(
@@ -180,7 +241,9 @@ class HealthMetricsCard extends ConsumerWidget {
       context: context,
       builder: (ctx) => AlertDialog(
         title: const Text('Delete Measurement'),
-        content: const Text('Are you sure you want to delete this measurement?'),
+        content: const Text(
+          'Are you sure you want to delete this measurement?',
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
@@ -191,10 +254,7 @@ class HealthMetricsCard extends ConsumerWidget {
               ref.read(healthMetricsProvider).deleteHealthMetrics(metrics.id);
               Navigator.pop(ctx);
             },
-            child: Text(
-              'Delete',
-              style: TextStyle(color: AppColors.error),
-            ),
+            child: Text('Delete', style: TextStyle(color: AppColors.error)),
           ),
         ],
       ),

@@ -15,14 +15,11 @@ class AddEventBottomSheet extends ConsumerStatefulWidget {
   final CalendarEventModel? existingEvent;
   final DateTime? initialDate;
 
-  const AddEventBottomSheet({
-    super.key,
-    this.existingEvent,
-    this.initialDate,
-  });
+  const AddEventBottomSheet({super.key, this.existingEvent, this.initialDate});
 
   @override
-  ConsumerState<AddEventBottomSheet> createState() => _AddEventBottomSheetState();
+  ConsumerState<AddEventBottomSheet> createState() =>
+      _AddEventBottomSheetState();
 }
 
 class _AddEventBottomSheetState extends ConsumerState<AddEventBottomSheet> {
@@ -59,14 +56,20 @@ class _AddEventBottomSheetState extends ConsumerState<AddEventBottomSheet> {
       _selectedStartTime = TimeOfDay.fromDateTime(event.eventDateTime);
       _selectedEndTime = event.endDateTime != null
           ? TimeOfDay.fromDateTime(event.endDateTime!)
-          : TimeOfDay(hour: _selectedStartTime.hour + 1, minute: _selectedStartTime.minute);
+          : TimeOfDay(
+              hour: _selectedStartTime.hour + 1,
+              minute: _selectedStartTime.minute,
+            );
       _selectedColor = event.eventColor;
       _reminderEnabled = event.reminderEnabled;
       _reminderMinutesBefore = event.reminderMinutesBefore;
     } else {
       _selectedDate = widget.initialDate ?? DateTime.now();
       _selectedStartTime = TimeOfDay.now();
-      _selectedEndTime = TimeOfDay(hour: TimeOfDay.now().hour + 1, minute: TimeOfDay.now().minute);
+      _selectedEndTime = TimeOfDay(
+        hour: TimeOfDay.now().hour + 1,
+        minute: TimeOfDay.now().minute,
+      );
     }
   }
 
@@ -124,7 +127,10 @@ class _AddEventBottomSheetState extends ConsumerState<AddEventBottomSheet> {
       setState(() {
         _selectedStartTime = picked;
         // Auto-adjust end time to be 1 hour after start
-        _selectedEndTime = TimeOfDay(hour: picked.hour + 1, minute: picked.minute);
+        _selectedEndTime = TimeOfDay(
+          hour: picked.hour + 1,
+          minute: picked.minute,
+        );
       });
     }
   }
@@ -180,20 +186,25 @@ class _AddEventBottomSheetState extends ConsumerState<AddEventBottomSheet> {
 
       DateTime? reminderAt;
       if (_reminderEnabled) {
-        reminderAt = eventDateTime.subtract(Duration(minutes: _reminderMinutesBefore));
+        reminderAt = eventDateTime.subtract(
+          Duration(minutes: _reminderMinutesBefore),
+        );
       }
 
       // Check if reminder settings changed (for updates)
-      final isReminderChanged = widget.existingEvent != null &&
+      final isReminderChanged =
+          widget.existingEvent != null &&
           (widget.existingEvent!.reminderEnabled != _reminderEnabled ||
-              widget.existingEvent!.reminderMinutesBefore != _reminderMinutesBefore ||
+              widget.existingEvent!.reminderMinutesBefore !=
+                  _reminderMinutesBefore ||
               widget.existingEvent!.eventDateTime != eventDateTime);
 
       // Reset reminderSent to false if:
       // - New event
       // - Reminder settings changed
       // - Event time changed
-      final shouldResetReminderSent = widget.existingEvent == null || isReminderChanged;
+      final shouldResetReminderSent =
+          widget.existingEvent == null || isReminderChanged;
 
       final event = CalendarEventModel(
         id: widget.existingEvent?.id ?? const Uuid().v4(),
@@ -206,7 +217,9 @@ class _AddEventBottomSheetState extends ConsumerState<AddEventBottomSheet> {
         reminderEnabled: _reminderEnabled,
         reminderMinutesBefore: _reminderMinutesBefore,
         reminderAt: reminderAt,
-        reminderSent: shouldResetReminderSent ? false : (widget.existingEvent?.reminderSent ?? false),
+        reminderSent: shouldResetReminderSent
+            ? false
+            : (widget.existingEvent?.reminderSent ?? false),
         createdAt: widget.existingEvent?.createdAt ?? DateTime.now(),
       );
 
@@ -230,7 +243,7 @@ class _AddEventBottomSheetState extends ConsumerState<AddEventBottomSheet> {
         maxHeight: MediaQuery.of(context).size.height * 0.85,
       ),
       decoration: BoxDecoration(
-        color: AppColors.background,
+        color: Theme.of(context).scaffoldBackgroundColor,
         borderRadius: BorderRadius.vertical(top: Radius.circular(32.r)),
       ),
       padding: EdgeInsets.only(
@@ -259,7 +272,9 @@ class _AddEventBottomSheetState extends ConsumerState<AddEventBottomSheet> {
               ),
               Text(
                 widget.existingEvent != null ? 'Edit Event' : 'New Event',
-                style: AppTextStyles.heading1.copyWith(fontSize: 24.sp),
+                style: AppTextStyles.heading1
+                    .adaptive(context)
+                    .copyWith(fontSize: 24.sp),
               ),
               SizedBox(height: 24.h),
               CustomTextField(
@@ -286,7 +301,9 @@ class _AddEventBottomSheetState extends ConsumerState<AddEventBottomSheet> {
               _buildReminderSection(),
               SizedBox(height: 32.h),
               CustomButton(
-                text: widget.existingEvent != null ? 'Update Event' : 'Add Event',
+                text: widget.existingEvent != null
+                    ? 'Update Event'
+                    : 'Add Event',
                 onPressed: _handleSave,
                 isLoading: _isSaving,
                 backgroundColor: AppColors.calendarColor,
@@ -308,7 +325,9 @@ class _AddEventBottomSheetState extends ConsumerState<AddEventBottomSheet> {
             'Event Color',
             style: AppTextStyles.caption.copyWith(
               fontWeight: FontWeight.w600,
-              color: AppColors.onBackground.withValues(alpha: 0.7),
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? AppColors.darkOnBackground.withValues(alpha: 0.7)
+                  : AppColors.onBackground.withValues(alpha: 0.7),
             ),
           ),
         ),
@@ -336,7 +355,7 @@ class _AddEventBottomSheetState extends ConsumerState<AddEventBottomSheet> {
                             color: Color(color).withValues(alpha: 0.4),
                             blurRadius: 8,
                             spreadRadius: 2,
-                          )
+                          ),
                         ]
                       : null,
                 ),
@@ -377,7 +396,9 @@ class _AddEventBottomSheetState extends ConsumerState<AddEventBottomSheet> {
             'Date',
             style: AppTextStyles.caption.copyWith(
               fontWeight: FontWeight.w600,
-              color: AppColors.onBackground.withValues(alpha: 0.7),
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? AppColors.darkOnBackground.withValues(alpha: 0.7)
+                  : AppColors.onBackground.withValues(alpha: 0.7),
             ),
           ),
         ),
@@ -388,9 +409,15 @@ class _AddEventBottomSheetState extends ConsumerState<AddEventBottomSheet> {
           child: Container(
             padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? AppColors.darkCard
+                  : Colors.white,
               borderRadius: BorderRadius.circular(16.r),
-              border: Border.all(color: AppColors.lightGrey),
+              border: Border.all(
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? AppColors.darkLightGrey
+                    : AppColors.lightGrey,
+              ),
             ),
             child: Row(
               children: [
@@ -403,7 +430,9 @@ class _AddEventBottomSheetState extends ConsumerState<AddEventBottomSheet> {
                 Expanded(
                   child: Text(
                     DateFormat('MMM d, yyyy').format(_selectedDate),
-                    style: AppTextStyles.bodyText.copyWith(fontSize: 14.sp),
+                    style: AppTextStyles.bodyText
+                        .adaptive(context)
+                        .copyWith(fontSize: 14.sp),
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
@@ -425,7 +454,9 @@ class _AddEventBottomSheetState extends ConsumerState<AddEventBottomSheet> {
             'Start Time',
             style: AppTextStyles.caption.copyWith(
               fontWeight: FontWeight.w600,
-              color: AppColors.onBackground.withValues(alpha: 0.7),
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? AppColors.darkOnBackground.withValues(alpha: 0.7)
+                  : AppColors.onBackground.withValues(alpha: 0.7),
             ),
           ),
         ),
@@ -436,9 +467,15 @@ class _AddEventBottomSheetState extends ConsumerState<AddEventBottomSheet> {
           child: Container(
             padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? AppColors.darkCard
+                  : Colors.white,
               borderRadius: BorderRadius.circular(16.r),
-              border: Border.all(color: AppColors.lightGrey),
+              border: Border.all(
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? AppColors.darkLightGrey
+                    : AppColors.lightGrey,
+              ),
             ),
             child: Row(
               children: [
@@ -451,7 +488,9 @@ class _AddEventBottomSheetState extends ConsumerState<AddEventBottomSheet> {
                 Expanded(
                   child: Text(
                     _selectedStartTime.format(context),
-                    style: AppTextStyles.bodyText.copyWith(fontSize: 14.sp),
+                    style: AppTextStyles.bodyText
+                        .adaptive(context)
+                        .copyWith(fontSize: 14.sp),
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
@@ -473,7 +512,9 @@ class _AddEventBottomSheetState extends ConsumerState<AddEventBottomSheet> {
             'End Time',
             style: AppTextStyles.caption.copyWith(
               fontWeight: FontWeight.w600,
-              color: AppColors.onBackground.withValues(alpha: 0.7),
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? AppColors.darkOnBackground.withValues(alpha: 0.7)
+                  : AppColors.onBackground.withValues(alpha: 0.7),
             ),
           ),
         ),
@@ -484,9 +525,15 @@ class _AddEventBottomSheetState extends ConsumerState<AddEventBottomSheet> {
           child: Container(
             padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? AppColors.darkCard
+                  : Colors.white,
               borderRadius: BorderRadius.circular(16.r),
-              border: Border.all(color: AppColors.lightGrey),
+              border: Border.all(
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? AppColors.darkLightGrey
+                    : AppColors.lightGrey,
+              ),
             ),
             child: Row(
               children: [
@@ -499,7 +546,9 @@ class _AddEventBottomSheetState extends ConsumerState<AddEventBottomSheet> {
                 Expanded(
                   child: Text(
                     _selectedEndTime.format(context),
-                    style: AppTextStyles.bodyText.copyWith(fontSize: 14.sp),
+                    style: AppTextStyles.bodyText
+                        .adaptive(context)
+                        .copyWith(fontSize: 14.sp),
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
@@ -521,7 +570,9 @@ class _AddEventBottomSheetState extends ConsumerState<AddEventBottomSheet> {
             'Reminder',
             style: AppTextStyles.caption.copyWith(
               fontWeight: FontWeight.w600,
-              color: AppColors.onBackground.withValues(alpha: 0.7),
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? AppColors.darkOnBackground.withValues(alpha: 0.7)
+                  : AppColors.onBackground.withValues(alpha: 0.7),
             ),
           ),
         ),
@@ -529,9 +580,15 @@ class _AddEventBottomSheetState extends ConsumerState<AddEventBottomSheet> {
         Container(
           padding: EdgeInsets.all(16.w),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: Theme.of(context).brightness == Brightness.dark
+                ? AppColors.darkCard
+                : Colors.white,
             borderRadius: BorderRadius.circular(16.r),
-            border: Border.all(color: AppColors.lightGrey),
+            border: Border.all(
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? AppColors.darkLightGrey
+                  : AppColors.lightGrey,
+            ),
           ),
           child: Column(
             children: [
@@ -548,16 +605,19 @@ class _AddEventBottomSheetState extends ConsumerState<AddEventBottomSheet> {
                       SizedBox(width: 12.w),
                       Text(
                         'Enable Reminder',
-                        style: AppTextStyles.bodyText.copyWith(
-                          fontWeight: FontWeight.w500,
-                        ),
+                        style: AppTextStyles.bodyText
+                            .adaptive(context)
+                            .copyWith(fontWeight: FontWeight.w500),
                       ),
                     ],
                   ),
                   Switch(
                     value: _reminderEnabled,
-                    onChanged: (value) => setState(() => _reminderEnabled = value),
-                    activeTrackColor: AppColors.calendarColor.withValues(alpha: 0.5),
+                    onChanged: (value) =>
+                        setState(() => _reminderEnabled = value),
+                    activeTrackColor: AppColors.calendarColor.withValues(
+                      alpha: 0.5,
+                    ),
                     activeThumbColor: AppColors.calendarColor,
                   ),
                 ],
@@ -568,7 +628,9 @@ class _AddEventBottomSheetState extends ConsumerState<AddEventBottomSheet> {
                   width: double.infinity,
                   padding: EdgeInsets.symmetric(horizontal: 16.w),
                   decoration: BoxDecoration(
-                    color: AppColors.background,
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? AppColors.darkElevated
+                        : AppColors.background,
                     borderRadius: BorderRadius.circular(12.r),
                   ),
                   child: DropdownButtonHideUnderline(
@@ -584,7 +646,9 @@ class _AddEventBottomSheetState extends ConsumerState<AddEventBottomSheet> {
                           value: option['value'] as int,
                           child: Text(
                             option['label'] as String,
-                            style: AppTextStyles.bodyText.copyWith(fontSize: 14.sp),
+                            style: AppTextStyles.bodyText
+                                .adaptive(context)
+                                .copyWith(fontSize: 14.sp),
                           ),
                         );
                       }).toList(),

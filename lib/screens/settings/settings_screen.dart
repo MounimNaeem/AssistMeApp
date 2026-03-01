@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../utils/constants/colors.dart';
 import '../../utils/constants/text_styles.dart';
 import '../../utils/routes/app_router.dart';
+import '../../utils/themes/theme_provider.dart';
 import '../auth/providers/auth_provider.dart';
 
 class SettingsScreen extends ConsumerWidget {
@@ -13,20 +14,37 @@ class SettingsScreen extends ConsumerWidget {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24.r)),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(24.r),
+        ),
         title: const Text('Logout?'),
-        content: const Text('Are you sure you want to sign out of your account?'),
+        content: const Text(
+          'Are you sure you want to sign out of your account?',
+        ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('Cancel'),
+          ),
           TextButton(
             onPressed: () async {
               Navigator.pop(ctx);
               await ref.read(authProvider).logout();
               if (context.mounted) {
-                Navigator.pushNamedAndRemoveUntil(context, AppRouter.login, (route) => false);
+                Navigator.pushNamedAndRemoveUntil(
+                  context,
+                  AppRouter.login,
+                  (route) => false,
+                );
               }
             },
-            child: const Text('Logout', style: TextStyle(color: AppColors.error, fontWeight: FontWeight.bold)),
+            child: const Text(
+              'Logout',
+              style: TextStyle(
+                color: AppColors.error,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
           ),
         ],
       ),
@@ -36,14 +54,22 @@ class SettingsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(authProvider).currentUser;
+    final theme = ref.watch(themeProvider);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final cardColor = isDark ? AppColors.darkCard : Colors.white;
+    final shadowColor = isDark
+        ? Colors.transparent
+        : Colors.black.withOpacity(0.04);
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
         title: const Text('Settings'),
         backgroundColor: Colors.transparent,
         elevation: 0,
-        foregroundColor: AppColors.onBackground,
+        foregroundColor: isDark
+            ? AppColors.darkOnBackground
+            : AppColors.onBackground,
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(24.w),
@@ -52,24 +78,41 @@ class SettingsScreen extends ConsumerWidget {
             Container(
               padding: EdgeInsets.all(24.w),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: cardColor,
                 borderRadius: BorderRadius.circular(24.r),
-                boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.04), blurRadius: 20, offset: const Offset(0, 10))],
+                boxShadow: [
+                  BoxShadow(
+                    color: shadowColor,
+                    blurRadius: 20,
+                    offset: const Offset(0, 10),
+                  ),
+                ],
               ),
               child: Row(
                 children: [
                   CircleAvatar(
                     radius: 32.r,
                     backgroundColor: AppColors.primary.withOpacity(0.1),
-                    child: Text(user?.name.substring(0,1).toUpperCase() ?? 'U', style: AppTextStyles.heading1.copyWith(color: AppColors.primary)),
+                    child: Text(
+                      user?.name.substring(0, 1).toUpperCase() ?? 'U',
+                      style: AppTextStyles.heading1.copyWith(
+                        color: AppColors.primary,
+                      ),
+                    ),
                   ),
                   SizedBox(width: 16.w),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(user?.name ?? 'User Name', style: AppTextStyles.heading2),
-                        Text(user?.email ?? 'user@example.com', style: AppTextStyles.caption),
+                        Text(
+                          user?.name ?? 'User Name',
+                          style: AppTextStyles.heading2.adaptive(context),
+                        ),
+                        Text(
+                          user?.email ?? 'user@example.com',
+                          style: AppTextStyles.caption,
+                        ),
                       ],
                     ),
                   ),
@@ -77,22 +120,37 @@ class SettingsScreen extends ConsumerWidget {
               ),
             ),
             SizedBox(height: 32.h),
-            _buildSettingsCard([
+            _buildSettingsCard(cardColor, shadowColor, [
+              _buildThemeToggle(context, ref, theme, isDark, cardColor),
+              Divider(
+                indent: 56,
+                color: isDark ? AppColors.darkLightGrey : null,
+              ),
               _buildSettingItem(
+                isDark: isDark,
                 icon: Icons.lock_outline_rounded,
                 title: 'Update Password',
                 color: AppColors.primary,
-                onTap: () => Navigator.pushNamed(context, AppRouter.updatePassword),
+                onTap: () =>
+                    Navigator.pushNamed(context, AppRouter.updatePassword),
               ),
-              const Divider(indent: 56),
+              Divider(
+                indent: 56,
+                color: isDark ? AppColors.darkLightGrey : null,
+              ),
               _buildSettingItem(
+                isDark: isDark,
                 icon: Icons.notifications_none_rounded,
                 title: 'Notifications',
                 color: AppColors.warning,
                 onTap: () {},
               ),
-              const Divider(indent: 56),
+              Divider(
+                indent: 56,
+                color: isDark ? AppColors.darkLightGrey : null,
+              ),
               _buildSettingItem(
+                isDark: isDark,
                 icon: Icons.help_outline_rounded,
                 title: 'Help & Support',
                 color: AppColors.info,
@@ -100,8 +158,9 @@ class SettingsScreen extends ConsumerWidget {
               ),
             ]),
             SizedBox(height: 24.h),
-            _buildSettingsCard([
+            _buildSettingsCard(cardColor, shadowColor, [
               _buildSettingItem(
+                isDark: isDark,
                 icon: Icons.logout_rounded,
                 title: 'Sign Out',
                 color: AppColors.error,
@@ -114,29 +173,96 @@ class SettingsScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildSettingsCard(List<Widget> children) {
+  Widget _buildThemeToggle(
+    BuildContext context,
+    WidgetRef ref,
+    ThemeProvider theme,
+    bool isDark,
+    Color cardColor,
+  ) {
+    return ListTile(
+      leading: Container(
+        padding: EdgeInsets.all(8.w),
+        decoration: BoxDecoration(
+          color: AppColors.primaryLight.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(12.r),
+        ),
+        child: Icon(
+          isDark ? Icons.dark_mode_rounded : Icons.light_mode_rounded,
+          color: AppColors.primaryLight,
+          size: 22.w,
+        ),
+      ),
+      title: Text(
+        'Dark Mode',
+        style: AppTextStyles.bodyText
+            .adaptive(context)
+            .copyWith(fontWeight: FontWeight.w600),
+      ),
+      trailing: Switch.adaptive(
+        value: theme.isDarkMode,
+        onChanged: (value) => ref.read(themeProvider).toggleTheme(value),
+        activeColor: AppColors.primaryLight,
+      ),
+      contentPadding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 4.h),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24.r)),
+    );
+  }
+
+  Widget _buildSettingsCard(
+    Color cardColor,
+    Color shadowColor,
+    List<Widget> children,
+  ) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: cardColor,
         borderRadius: BorderRadius.circular(24.r),
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.04), blurRadius: 20, offset: const Offset(0, 10))],
+        boxShadow: [
+          BoxShadow(
+            color: shadowColor,
+            blurRadius: 20,
+            offset: const Offset(0, 10),
+          ),
+        ],
       ),
       child: Column(children: children),
     );
   }
 
-  Widget _buildSettingItem({required IconData icon, required String title, required VoidCallback onTap, required Color color}) {
-    return ListTile(
-      onTap: onTap,
-      leading: Container(
-        padding: EdgeInsets.all(8.w),
-        decoration: BoxDecoration(color: color.withOpacity(0.1), borderRadius: BorderRadius.circular(12.r)),
-        child: Icon(icon, color: color, size: 22.w),
+  Widget _buildSettingItem({
+    required IconData icon,
+    required String title,
+    required VoidCallback onTap,
+    required Color color,
+    required bool isDark,
+  }) {
+    return Builder(
+      builder: (context) => ListTile(
+        onTap: onTap,
+        leading: Container(
+          padding: EdgeInsets.all(8.w),
+          decoration: BoxDecoration(
+            color: color.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(12.r),
+          ),
+          child: Icon(icon, color: color, size: 22.w),
+        ),
+        title: Text(
+          title,
+          style: AppTextStyles.bodyText
+              .adaptive(context)
+              .copyWith(fontWeight: FontWeight.w600),
+        ),
+        trailing: Icon(
+          Icons.chevron_right_rounded,
+          color: isDark ? AppColors.darkGrey : AppColors.grey,
+        ),
+        contentPadding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 4.h),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(24.r),
+        ),
       ),
-      title: Text(title, style: AppTextStyles.bodyText.copyWith(fontWeight: FontWeight.w600)),
-      trailing: const Icon(Icons.chevron_right_rounded, color: AppColors.grey),
-      contentPadding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 4.h),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24.r)),
     );
   }
 }

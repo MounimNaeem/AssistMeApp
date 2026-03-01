@@ -34,7 +34,8 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
     // Update displayed month when user swipes
     if (details.visibleDates.isNotEmpty) {
       final midDate = details.visibleDates[details.visibleDates.length ~/ 2];
-      if (midDate.month != _displayedMonth.month || midDate.year != _displayedMonth.year) {
+      if (midDate.month != _displayedMonth.month ||
+          midDate.year != _displayedMonth.year) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           if (mounted) {
             setState(() {
@@ -148,7 +149,7 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
     final calendarState = ref.watch(calendarProvider);
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: calendarState.isLoading && calendarState.events.isEmpty
           ? const LoadingIndicator(message: 'Loading events...')
           : CustomScrollView(
@@ -191,11 +192,15 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
     return Container(
       margin: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).brightness == Brightness.dark
+            ? AppColors.darkCard
+            : Colors.white,
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.08),
+            color: Theme.of(context).brightness == Brightness.dark
+                ? Colors.transparent
+                : Colors.black.withValues(alpha: 0.08),
             blurRadius: 20,
             offset: const Offset(0, 4),
           ),
@@ -230,10 +235,12 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
                 numberOfWeeksInView: 6,
                 showTrailingAndLeadingDates: true,
                 monthCellStyle: MonthCellStyle(
-                  textStyle: const TextStyle(
+                  textStyle: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
-                    color: AppColors.onBackground,
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? AppColors.darkOnBackground
+                        : AppColors.onBackground,
                   ),
                   trailingDatesTextStyle: TextStyle(
                     fontSize: 14,
@@ -246,7 +253,9 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
                 ),
               ),
               viewHeaderStyle: ViewHeaderStyle(
-                backgroundColor: Colors.white,
+                backgroundColor: Theme.of(context).brightness == Brightness.dark
+                    ? AppColors.darkCard
+                    : Colors.white,
                 dayTextStyle: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.w600,
@@ -267,15 +276,23 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
 
   Widget _buildCustomCalendarHeader() {
     final monthYearStr = DateFormat('MMMM yyyy').format(_displayedMonth);
-    final isCurrentMonth = _displayedMonth.month == DateTime.now().month &&
+    final isCurrentMonth =
+        _displayedMonth.month == DateTime.now().month &&
         _displayedMonth.year == DateTime.now().year;
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      decoration: const BoxDecoration(
-        color: Colors.white,
+      decoration: BoxDecoration(
+        color: Theme.of(context).brightness == Brightness.dark
+            ? AppColors.darkCard
+            : Colors.white,
         border: Border(
-          bottom: BorderSide(color: Color(0xFFEEEEEE), width: 1),
+          bottom: BorderSide(
+            color: Theme.of(context).brightness == Brightness.dark
+                ? AppColors.darkLightGrey
+                : const Color(0xFFEEEEEE),
+            width: 1,
+          ),
         ),
       ),
       child: Row(
@@ -284,7 +301,10 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
           // Previous Month Button
           GestureDetector(
             onTap: () {
-              final prevMonth = DateTime(_displayedMonth.year, _displayedMonth.month - 1);
+              final prevMonth = DateTime(
+                _displayedMonth.year,
+                _displayedMonth.month - 1,
+              );
               setState(() => _displayedMonth = prevMonth);
               _calendarController.displayDate = prevMonth;
             },
@@ -338,7 +358,9 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
                 GestureDetector(
                   onTap: () {
                     final today = DateTime.now();
-                    setState(() => _displayedMonth = DateTime(today.year, today.month));
+                    setState(
+                      () => _displayedMonth = DateTime(today.year, today.month),
+                    );
                     _calendarController.displayDate = today;
                   },
                   child: Container(
@@ -357,7 +379,10 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
                 ),
               GestureDetector(
                 onTap: () {
-                  final nextMonth = DateTime(_displayedMonth.year, _displayedMonth.month + 1);
+                  final nextMonth = DateTime(
+                    _displayedMonth.year,
+                    _displayedMonth.month + 1,
+                  );
                   setState(() => _displayedMonth = nextMonth);
                   _calendarController.displayDate = nextMonth;
                 },
@@ -395,10 +420,12 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
         children: [
           Text(
             dateStr,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w700,
-              color: AppColors.onBackground,
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? AppColors.darkOnBackground
+                  : AppColors.onBackground,
             ),
           ),
           Container(
@@ -519,11 +546,15 @@ class _EventCard extends StatelessWidget {
         margin: const EdgeInsets.only(bottom: 12),
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: Theme.of(context).brightness == Brightness.dark
+              ? AppColors.darkCard
+              : Colors.white,
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.05),
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? Colors.transparent
+                  : Colors.black.withValues(alpha: 0.05),
               blurRadius: 10,
               offset: const Offset(0, 2),
             ),
@@ -551,7 +582,11 @@ class _EventCard extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w600,
-                      color: isPast ? AppColors.grey : AppColors.onBackground,
+                      color: isPast
+                          ? AppColors.grey
+                          : (Theme.of(context).brightness == Brightness.dark
+                                ? AppColors.darkOnBackground
+                                : AppColors.onBackground),
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -669,10 +704,12 @@ class _EventDetailsSheet extends StatelessWidget {
               Expanded(
                 child: Text(
                   event.title,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w800,
-                    color: AppColors.onBackground,
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? AppColors.darkOnBackground
+                        : AppColors.onBackground,
                   ),
                 ),
               ),
@@ -695,14 +732,16 @@ class _EventDetailsSheet extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 16),
-          _buildDetailRow(Icons.calendar_today_rounded, dateStr),
+          _buildDetailRow(context, Icons.calendar_today_rounded, dateStr),
           const SizedBox(height: 10),
           _buildDetailRow(
+            context,
             Icons.access_time_rounded,
             endTimeStr != null ? '$timeStr - $endTimeStr' : timeStr,
           ),
           const SizedBox(height: 10),
           _buildDetailRow(
+            context,
             event.reminderEnabled
                 ? Icons.notifications_active_rounded
                 : Icons.notifications_off_rounded,
@@ -723,9 +762,11 @@ class _EventDetailsSheet extends StatelessWidget {
             const SizedBox(height: 6),
             Text(
               event.description,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 14,
-                color: AppColors.onBackground,
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? AppColors.darkOnBackground
+                    : AppColors.onBackground,
               ),
             ),
           ],
@@ -735,7 +776,7 @@ class _EventDetailsSheet extends StatelessWidget {
     );
   }
 
-  Widget _buildDetailRow(IconData icon, String text) {
+  Widget _buildDetailRow(BuildContext context, IconData icon, String text) {
     return Row(
       children: [
         Icon(icon, size: 18, color: AppColors.calendarColor),
@@ -743,7 +784,12 @@ class _EventDetailsSheet extends StatelessWidget {
         Flexible(
           child: Text(
             text,
-            style: const TextStyle(fontSize: 14, color: AppColors.onBackground),
+            style: TextStyle(
+              fontSize: 14,
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? AppColors.darkOnBackground
+                  : AppColors.onBackground,
+            ),
           ),
         ),
       ],
@@ -811,9 +857,18 @@ class _MonthYearPickerState extends State<_MonthYearPicker> {
   late int _selectedMonth;
 
   final List<String> _months = [
-    'January', 'February', 'March', 'April',
-    'May', 'June', 'July', 'August',
-    'September', 'October', 'November', 'December'
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
   ];
 
   @override
@@ -826,7 +881,10 @@ class _MonthYearPickerState extends State<_MonthYearPicker> {
   @override
   Widget build(BuildContext context) {
     final currentYear = DateTime.now().year;
-    final years = List.generate(10, (i) => currentYear - 2 + i); // 2 years back, 7 years ahead
+    final years = List.generate(
+      10,
+      (i) => currentYear - 2 + i,
+    ); // 2 years back, 7 years ahead
 
     return Container(
       decoration: const BoxDecoration(
@@ -850,12 +908,14 @@ class _MonthYearPickerState extends State<_MonthYearPicker> {
             ),
           ),
           // Title
-          const Text(
+          Text(
             'Select Month & Year',
             style: TextStyle(
-              fontSize: 18,
+              fontSize: 20,
               fontWeight: FontWeight.w700,
-              color: AppColors.onBackground,
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? AppColors.darkOnBackground
+                  : AppColors.onBackground,
             ),
           ),
           const SizedBox(height: 20),
@@ -872,12 +932,23 @@ class _MonthYearPickerState extends State<_MonthYearPicker> {
                   onTap: () => setState(() => _selectedYear = year),
                   child: Container(
                     margin: const EdgeInsets.symmetric(horizontal: 6),
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 12,
+                    ),
                     decoration: BoxDecoration(
-                      color: isSelected ? AppColors.calendarColor : Colors.white,
+                      color: isSelected
+                          ? AppColors.calendarColor
+                          : (Theme.of(context).brightness == Brightness.dark
+                                ? AppColors.darkCard
+                                : Colors.white),
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(
-                        color: isSelected ? AppColors.calendarColor : AppColors.lightGrey,
+                        color: isSelected
+                            ? AppColors.calendarColor
+                            : (Theme.of(context).brightness == Brightness.dark
+                                  ? AppColors.darkLightGrey
+                                  : AppColors.lightGrey),
                       ),
                     ),
                     child: Text(
@@ -885,7 +956,11 @@ class _MonthYearPickerState extends State<_MonthYearPicker> {
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
-                        color: isSelected ? Colors.white : AppColors.onBackground,
+                        color: isSelected
+                            ? Colors.white
+                            : (Theme.of(context).brightness == Brightness.dark
+                                  ? AppColors.darkOnBackground
+                                  : AppColors.onBackground),
                       ),
                     ),
                   ),
@@ -908,7 +983,8 @@ class _MonthYearPickerState extends State<_MonthYearPicker> {
             itemBuilder: (context, index) {
               final month = index + 1;
               final isSelected = month == _selectedMonth;
-              final isCurrentMonth = month == DateTime.now().month &&
+              final isCurrentMonth =
+                  month == DateTime.now().month &&
                   _selectedYear == DateTime.now().year;
 
               return GestureDetector(
@@ -918,13 +994,17 @@ class _MonthYearPickerState extends State<_MonthYearPicker> {
                     color: isSelected
                         ? AppColors.calendarColor
                         : isCurrentMonth
-                            ? AppColors.calendarColor.withValues(alpha: 0.15)
-                            : Colors.white,
+                        ? AppColors.calendarColor.withValues(alpha: 0.15)
+                        : (Theme.of(context).brightness == Brightness.dark
+                              ? AppColors.darkCard
+                              : Colors.white),
                     borderRadius: BorderRadius.circular(10),
                     border: Border.all(
                       color: isSelected || isCurrentMonth
                           ? AppColors.calendarColor
-                          : AppColors.lightGrey,
+                          : (Theme.of(context).brightness == Brightness.dark
+                                ? AppColors.darkLightGrey
+                                : AppColors.lightGrey),
                     ),
                   ),
                   alignment: Alignment.center,
@@ -936,8 +1016,10 @@ class _MonthYearPickerState extends State<_MonthYearPicker> {
                       color: isSelected
                           ? Colors.white
                           : isCurrentMonth
-                              ? AppColors.calendarColor
-                              : AppColors.onBackground,
+                          ? AppColors.calendarColor
+                          : (Theme.of(context).brightness == Brightness.dark
+                                ? AppColors.darkOnBackground
+                                : AppColors.onBackground),
                     ),
                   ),
                 ),

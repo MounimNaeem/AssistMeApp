@@ -7,7 +7,7 @@ import '../../../widgets/custom_text_field.dart';
 
 class AddAssistantBottomSheet extends StatefulWidget {
   final Future<bool> Function(String name, String email, String password)
-      onSubmit;
+  onSubmit;
 
   const AddAssistantBottomSheet({super.key, required this.onSubmit});
 
@@ -75,7 +75,7 @@ class _AddAssistantBottomSheetState extends State<AddAssistantBottomSheet> {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.background,
+        color: Theme.of(context).scaffoldBackgroundColor,
         borderRadius: BorderRadius.vertical(top: Radius.circular(32.r)),
       ),
       padding: EdgeInsets.only(
@@ -104,7 +104,9 @@ class _AddAssistantBottomSheetState extends State<AddAssistantBottomSheet> {
               ),
               Text(
                 'Add Assistant',
-                style: AppTextStyles.heading1.copyWith(fontSize: 24.sp),
+                style: AppTextStyles.heading1
+                    .adaptive(context)
+                    .copyWith(fontSize: 24.sp),
               ),
               SizedBox(height: 24.h),
               if (_errorMessage != null)
@@ -119,14 +121,19 @@ class _AddAssistantBottomSheetState extends State<AddAssistantBottomSheet> {
                   ),
                   child: Row(
                     children: [
-                      Icon(Icons.error_outline,
-                          color: AppColors.error, size: 20.w),
+                      Icon(
+                        Icons.error_outline,
+                        color: AppColors.error,
+                        size: 20.w,
+                      ),
                       SizedBox(width: 8.w),
                       Expanded(
                         child: Text(
                           _errorMessage!,
                           style: TextStyle(
-                              color: AppColors.error, fontSize: 13.sp),
+                            color: AppColors.error,
+                            fontSize: 13.sp,
+                          ),
                         ),
                       ),
                     ],

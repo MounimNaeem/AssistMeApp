@@ -12,7 +12,13 @@ class AppColors {
   // Backgrounds - Clean & Aesthetic
   static const Color background = Color(0xFFF8F9FA);
   static const Color surface = Colors.white;
-  
+
+  // Dark Mode Backgrounds
+  static const Color darkBackground = Color(0xFF121212);
+  static const Color darkSurface = Color(0xFF1E1E1E);
+  static const Color darkCard = Color(0xFF2C2C2C);
+  static const Color darkElevated = Color(0xFF383838);
+
   // Status Colors
   static const Color error = Color(0xFFE57373);
   static const Color success = Color(0xFF81C784);
@@ -26,6 +32,12 @@ class AppColors {
   static const Color grey = Color(0xFF9E9E9E);
   static const Color lightGrey = Color(0xFFE0E0E0);
 
+  // Dark Mode Text Colors
+  static const Color darkOnBackground = Color(0xFFE0E0E0);
+  static const Color darkOnSurface = Color(0xFFE0E0E0);
+  static const Color darkGrey = Color(0xFF757575);
+  static const Color darkLightGrey = Color(0xFF424242);
+
   // Feature Colors
   static const Color foodColor = Color(0xFFFFB74D);
   static const Color gymColor = Color(0xFF64B5F6);
@@ -34,5 +46,7 @@ class AppColors {
   static const Color sportsColor = Color(0xFFFF8A65);
   static const Color assistantColor = Color(0xFF4DB6AC);
   static const Color healthMetricsColor = Color(0xFFE57373);
-  static const Color notificationColor = Color(0xFF7E57C2); // Purple for notifications
+  static const Color notificationColor = Color(
+    0xFF7E57C2,
+  ); // Purple for notifications
 }

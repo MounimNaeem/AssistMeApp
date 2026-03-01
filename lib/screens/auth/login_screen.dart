@@ -45,7 +45,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     final authState = ref.watch(authProvider);
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
@@ -72,13 +72,17 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   SizedBox(height: 24.h),
                   Text(
                     'AssistMe',
-                    style: AppTextStyles.heading1.copyWith(fontSize: 36.sp),
+                    style: AppTextStyles.heading1
+                        .adaptive(context)
+                        .copyWith(fontSize: 36.sp),
                     textAlign: TextAlign.center,
                   ),
                   SizedBox(height: 8.h),
                   Text(
                     'Welcome back! Log in to continue.',
-                    style: AppTextStyles.caption.copyWith(fontSize: 15.sp),
+                    style: AppTextStyles.caption
+                        .adaptive(context)
+                        .copyWith(fontSize: 15.sp),
                     textAlign: TextAlign.center,
                   ),
                   SizedBox(height: 48.h),

@@ -91,10 +91,9 @@ class _RoutineListItem extends ConsumerWidget {
           Expanded(
             child: Text(
               routine.routineName,
-              style: AppTextStyles.bodyText.copyWith(
-                fontWeight: FontWeight.w600,
-                fontSize: 16.sp,
-              ),
+              style: AppTextStyles.bodyText
+                  .adaptive(context)
+                  .copyWith(fontWeight: FontWeight.w600, fontSize: 16.sp),
             ),
           ),
           PopupMenuButton<String>(
@@ -127,7 +126,9 @@ class _RoutineListItem extends ConsumerWidget {
       context: context,
       builder: (ctx) => AlertDialog(
         title: const Text('Delete Routine'),
-        content: Text('Are you sure you want to delete "${routine.routineName}"?'),
+        content: Text(
+          'Are you sure you want to delete "${routine.routineName}"?',
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
@@ -138,7 +139,10 @@ class _RoutineListItem extends ConsumerWidget {
               ref.read(gymProvider).deleteRoutine(routine.id);
               Navigator.pop(ctx);
             },
-            child: const Text('Delete', style: TextStyle(color: AppColors.error)),
+            child: const Text(
+              'Delete',
+              style: TextStyle(color: AppColors.error),
+            ),
           ),
         ],
       ),

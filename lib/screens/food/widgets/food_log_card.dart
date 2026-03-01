@@ -10,10 +10,7 @@ import '../widgets/food_detail_bottom_sheet.dart';
 class FoodLogCard extends StatelessWidget {
   final FoodLogModel foodLog;
 
-  const FoodLogCard({
-    super.key,
-    required this.foodLog,
-  });
+  const FoodLogCard({super.key, required this.foodLog});
 
   @override
   Widget build(BuildContext context) {
@@ -46,28 +43,44 @@ class FoodLogCard extends StatelessWidget {
               children: [
                 Text(
                   foodLog.mealName,
-                  style: AppTextStyles.bodyText.copyWith(fontWeight: FontWeight.w700),
+                  style: AppTextStyles.bodyText
+                      .adaptive(context)
+                      .copyWith(fontWeight: FontWeight.w700),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
                 SizedBox(height: 4.h),
                 Text(
                   '${DateFormat('h:mm a').format(foodLog.time)} • ${foodLog.mealType}',
-                  style: AppTextStyles.caption.copyWith(fontWeight: FontWeight.w500),
+                  style: AppTextStyles.caption
+                      .adaptive(context)
+                      .copyWith(fontWeight: FontWeight.w500),
                 ),
                 if (_hasMacros()) ...[
                   SizedBox(height: 6.h),
                   Row(
                     children: [
                       if (foodLog.protein != null)
-                        _buildMacroLabel('P', foodLog.protein!, Colors.red.shade400),
+                        _buildMacroLabel(
+                          'P',
+                          foodLog.protein!,
+                          Colors.red.shade400,
+                        ),
                       if (foodLog.carbs != null) ...[
                         SizedBox(width: 8.w),
-                        _buildMacroLabel('C', foodLog.carbs!, Colors.amber.shade600),
+                        _buildMacroLabel(
+                          'C',
+                          foodLog.carbs!,
+                          Colors.amber.shade600,
+                        ),
                       ],
                       if (foodLog.fat != null) ...[
                         SizedBox(width: 8.w),
-                        _buildMacroLabel('F', foodLog.fat!, Colors.blue.shade400),
+                        _buildMacroLabel(
+                          'F',
+                          foodLog.fat!,
+                          Colors.blue.shade400,
+                        ),
                       ],
                     ],
                   ),
@@ -81,11 +94,20 @@ class FoodLogCard extends StatelessWidget {
             children: [
               Text(
                 '${foodLog.calories}',
-                style: AppTextStyles.heading2.copyWith(fontSize: 18.sp, color: AppColors.onBackground),
+                style: AppTextStyles.heading2
+                    .adaptive(context)
+                    .copyWith(
+                      fontSize: 18.sp,
+                      color: Theme.of(context).brightness == Brightness.dark
+                          ? AppColors.darkOnBackground
+                          : AppColors.onBackground,
+                    ),
               ),
               Text(
                 'kcal',
-                style: AppTextStyles.caption.copyWith(fontSize: 11.sp, fontWeight: FontWeight.bold),
+                style: AppTextStyles.caption
+                    .adaptive(context)
+                    .copyWith(fontSize: 11.sp, fontWeight: FontWeight.bold),
               ),
             ],
           ),
@@ -96,24 +118,34 @@ class FoodLogCard extends StatelessWidget {
 
   IconData _getMealIcon() {
     switch (foodLog.mealType) {
-      case 'Breakfast': return Icons.wb_twilight_rounded;
-      case 'Lunch': return Icons.wb_sunny_rounded;
-      case 'Dinner': return Icons.nightlight_round;
-      default: return Icons.apple_rounded;
+      case 'Breakfast':
+        return Icons.wb_twilight_rounded;
+      case 'Lunch':
+        return Icons.wb_sunny_rounded;
+      case 'Dinner':
+        return Icons.nightlight_round;
+      default:
+        return Icons.apple_rounded;
     }
   }
 
   Color _getMealColor() {
     switch (foodLog.mealType) {
-      case 'Breakfast': return Colors.orange;
-      case 'Lunch': return Colors.blue;
-      case 'Dinner': return Colors.indigo;
-      default: return Colors.green;
+      case 'Breakfast':
+        return Colors.orange;
+      case 'Lunch':
+        return Colors.blue;
+      case 'Dinner':
+        return Colors.indigo;
+      default:
+        return Colors.green;
     }
   }
 
   bool _hasMacros() {
-    return foodLog.protein != null || foodLog.carbs != null || foodLog.fat != null;
+    return foodLog.protein != null ||
+        foodLog.carbs != null ||
+        foodLog.fat != null;
   }
 
   Widget _buildMacroLabel(String label, int value, Color color) {
