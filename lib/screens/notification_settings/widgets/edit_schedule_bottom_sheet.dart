@@ -153,18 +153,26 @@ class _EditScheduleBottomSheetState
   }
 
   Future<void> _selectTime() async {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final picked = await showTimePicker(
       context: context,
       initialTime: _selectedTime,
       builder: (context, child) {
         return Theme(
           data: Theme.of(context).copyWith(
-            colorScheme: ColorScheme.light(
-              primary: AppColors.notificationColor,
-              onPrimary: Colors.white,
-              surface: Colors.white,
-              onSurface: AppColors.onBackground,
-            ),
+            colorScheme: isDark
+                ? ColorScheme.dark(
+                    primary: AppColors.notificationColor,
+                    onPrimary: Colors.white,
+                    surface: AppColors.darkCard,
+                    onSurface: AppColors.darkOnBackground,
+                  )
+                : ColorScheme.light(
+                    primary: AppColors.notificationColor,
+                    onPrimary: Colors.white,
+                    surface: Colors.white,
+                    onSurface: AppColors.onBackground,
+                  ),
           ),
           child: child!,
         );
@@ -311,7 +319,9 @@ class _EditScheduleBottomSheetState
                   height: 4.h,
                   margin: EdgeInsets.only(bottom: 24.h),
                   decoration: BoxDecoration(
-                    color: AppColors.lightGrey,
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? AppColors.darkLightGrey
+                        : AppColors.lightGrey,
                     borderRadius: BorderRadius.circular(2.r),
                   ),
                 ),
@@ -458,7 +468,7 @@ class _EditScheduleBottomSheetState
                         keyboardType: TextInputType.number,
                         textAlign: TextAlign.center,
                         onChanged: (_) => setState(() {}),
-                        style: AppTextStyles.bodyText.copyWith(
+                        style: AppTextStyles.bodyText.adaptive(context).copyWith(
                           fontWeight: FontWeight.w600,
                         ),
                         decoration: InputDecoration(
@@ -509,7 +519,7 @@ class _EditScheduleBottomSheetState
                           : _frequencyType == 'weeks'
                           ? 'weeks'
                           : 'months',
-                      style: AppTextStyles.bodyText,
+                      style: AppTextStyles.bodyText.adaptive(context),
                     ),
                   ],
                 ),
@@ -645,14 +655,16 @@ class _EditScheduleBottomSheetState
                       SizedBox(width: 16.w),
                       Text(
                         _formatTimeDisplay(_selectedTime),
-                        style: AppTextStyles.bodyText.copyWith(
+                        style: AppTextStyles.bodyText.adaptive(context).copyWith(
                           fontWeight: FontWeight.w600,
                         ),
                       ),
                       const Spacer(),
                       Icon(
                         Icons.keyboard_arrow_down_rounded,
-                        color: AppColors.grey,
+                        color: Theme.of(context).brightness == Brightness.dark
+                            ? AppColors.darkGrey
+                            : AppColors.grey,
                       ),
                     ],
                   ),

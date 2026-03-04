@@ -154,20 +154,20 @@ class _AddHealthMetricsBottomSheetState extends ConsumerState<AddHealthMetricsBo
     final isLoading = ref.watch(healthMetricsProvider).isLoading;
 
     return Container(
-      decoration: BoxDecoration(
-        color: AppColors.background,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(32.r)),
-      ),
-      padding: EdgeInsets.only(
-        left: 28.w,
-        right: 28.w,
-        top: 12.h,
-        bottom: MediaQuery.of(context).viewInsets.bottom + 28.h,
-      ),
-      child: SingleChildScrollView(
-        child: Form(
-          key: _formKey,
-          child: Column(
+        decoration: BoxDecoration(
+          color: Theme.of(context).scaffoldBackgroundColor,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(32.r)),
+        ),
+        padding: EdgeInsets.only(
+          left: 28.w,
+          right: 28.w,
+          top: 12.h,
+          bottom: MediaQuery.of(context).viewInsets.bottom + 28.h,
+        ),
+        child: SingleChildScrollView(
+          child: Form(
+            key: _formKey,
+            child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -177,14 +177,16 @@ class _AddHealthMetricsBottomSheetState extends ConsumerState<AddHealthMetricsBo
                   height: 4.h,
                   margin: EdgeInsets.only(bottom: 24.h),
                   decoration: BoxDecoration(
-                    color: AppColors.lightGrey,
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? AppColors.darkLightGrey
+                        : AppColors.lightGrey,
                     borderRadius: BorderRadius.circular(2.r),
                   ),
                 ),
               ),
               Text(
                 widget.existingMetrics != null ? 'Edit Metrics' : 'New Measurement',
-                style: AppTextStyles.heading1.copyWith(fontSize: 24.sp),
+                style: AppTextStyles.heading1.adaptive(context).copyWith(fontSize: 24.sp),
               ),
               SizedBox(height: 24.h),
 
@@ -253,7 +255,7 @@ class _AddHealthMetricsBottomSheetState extends ConsumerState<AddHealthMetricsBo
               // Body Measurements
               Text(
                 'Body Measurements',
-                style: AppTextStyles.heading2.copyWith(fontSize: 16.sp),
+                style: AppTextStyles.heading2.adaptive(context).copyWith(fontSize: 16.sp),
               ),
               SizedBox(height: 12.h),
 
@@ -310,7 +312,7 @@ class _AddHealthMetricsBottomSheetState extends ConsumerState<AddHealthMetricsBo
               // Calorie Goal
               Text(
                 'Nutrition Goal',
-                style: AppTextStyles.heading2.copyWith(fontSize: 16.sp),
+                style: AppTextStyles.heading2.adaptive(context).copyWith(fontSize: 16.sp),
               ),
               SizedBox(height: 12.h),
               CustomTextField(
@@ -358,7 +360,9 @@ class _AddHealthMetricsBottomSheetState extends ConsumerState<AddHealthMetricsBo
             'Date',
             style: AppTextStyles.caption.copyWith(
               fontWeight: FontWeight.w600,
-              color: AppColors.onBackground.withValues(alpha: 0.7),
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? AppColors.darkOnBackground.withValues(alpha: 0.7)
+                  : AppColors.onBackground.withValues(alpha: 0.7),
             ),
           ),
         ),
@@ -366,9 +370,15 @@ class _AddHealthMetricsBottomSheetState extends ConsumerState<AddHealthMetricsBo
         Container(
           padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 6.h),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: Theme.of(context).brightness == Brightness.dark
+                ? AppColors.darkCard
+                : Colors.white,
             borderRadius: BorderRadius.circular(16.r),
-            border: Border.all(color: AppColors.lightGrey),
+            border: Border.all(
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? AppColors.darkLightGrey
+                  : AppColors.lightGrey,
+            ),
           ),
           child: CupertinoCalendarPickerButton(
             minimumDateTime: DateTime(2020),

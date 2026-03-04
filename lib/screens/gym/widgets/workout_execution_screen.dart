@@ -260,10 +260,13 @@ class _WorkoutExecutionScreenState
 
               TextField(
                 controller: _notesController,
+                style: AppTextStyles.bodyText.adaptive(context),
                 decoration: InputDecoration(
                   hintText: 'Notes',
                   hintStyle: AppTextStyles.bodyText.copyWith(
-                    color: AppColors.grey,
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? AppColors.darkGrey
+                        : AppColors.grey,
                   ),
                   border: InputBorder.none,
                   filled: true,
@@ -273,7 +276,13 @@ class _WorkoutExecutionScreenState
                   contentPadding: EdgeInsets.all(12.w),
                 ),
               ),
-              Divider(height: 48.h, thickness: 1, color: AppColors.lightGrey),
+              Divider(
+                height: 48.h,
+                thickness: 1,
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? AppColors.darkLightGrey
+                    : AppColors.lightGrey,
+              ),
 
               ..._workout.exercises
                   .asMap()
@@ -306,7 +315,9 @@ class _WorkoutExecutionScreenState
             'Date',
             style: AppTextStyles.caption.copyWith(
               fontWeight: FontWeight.w600,
-              color: AppColors.onBackground.withValues(alpha: 0.7),
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? AppColors.darkOnBackground.withValues(alpha: 0.7)
+                  : AppColors.onBackground.withValues(alpha: 0.7),
             ),
           ),
         ),
@@ -355,7 +366,9 @@ class _WorkoutExecutionScreenState
             'Start Time',
             style: AppTextStyles.caption.copyWith(
               fontWeight: FontWeight.w600,
-              color: AppColors.onBackground.withValues(alpha: 0.7),
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? AppColors.darkOnBackground.withValues(alpha: 0.7)
+                  : AppColors.onBackground.withValues(alpha: 0.7),
             ),
           ),
         ),
@@ -402,7 +415,9 @@ class _WorkoutExecutionScreenState
             'End Time',
             style: AppTextStyles.caption.copyWith(
               fontWeight: FontWeight.w600,
-              color: AppColors.onBackground.withValues(alpha: 0.7),
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? AppColors.darkOnBackground.withValues(alpha: 0.7)
+                  : AppColors.onBackground.withValues(alpha: 0.7),
             ),
           ),
         ),
@@ -438,7 +453,9 @@ class _WorkoutExecutionScreenState
                   child: Text(
                     'Tap END to set',
                     style: AppTextStyles.bodyText.copyWith(
-                      color: AppColors.grey,
+                      color: Theme.of(context).brightness == Brightness.dark
+                          ? AppColors.darkGrey
+                          : AppColors.grey,
                     ),
                   ),
                 ),
@@ -458,7 +475,9 @@ class _WorkoutExecutionScreenState
               ex.exerciseName,
               style: AppTextStyles.heading2.copyWith(
                 fontSize: 22.sp,
-                color: AppColors.primary,
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? AppColors.primaryLight
+                    : AppColors.primary,
               ),
             ),
             PopupMenuButton<String>(
@@ -540,12 +559,19 @@ class _WorkoutExecutionScreenState
           child: Text(
             'Add Set',
             style: AppTextStyles.bodyText.copyWith(
-              color: AppColors.primary,
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? AppColors.primaryLight
+                  : AppColors.primary,
               fontWeight: FontWeight.w700,
             ),
           ),
         ),
-        Divider(height: 40.h),
+        Divider(
+          height: 40.h,
+          color: Theme.of(context).brightness == Brightness.dark
+              ? AppColors.darkLightGrey
+              : AppColors.lightGrey,
+        ),
       ],
     );
   }
@@ -565,12 +591,16 @@ class _WorkoutExecutionScreenState
             height: 24.w,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              border: Border.all(color: AppColors.grey),
+              border: Border.all(
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? AppColors.darkGrey
+                    : AppColors.grey,
+              ),
             ),
             child: Center(
               child: Text(
                 '${set.setNumber}',
-                style: AppTextStyles.caption.copyWith(fontSize: 10.sp),
+                style: AppTextStyles.caption.adaptive(context).copyWith(fontSize: 10.sp),
               ),
             ),
           ),

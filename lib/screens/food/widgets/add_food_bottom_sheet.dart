@@ -161,14 +161,16 @@ class _AddFoodBottomSheetState extends ConsumerState<AddFoodBottomSheet> {
                   height: 4.h,
                   margin: EdgeInsets.only(bottom: 24.h),
                   decoration: BoxDecoration(
-                    color: AppColors.lightGrey,
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? AppColors.darkLightGrey
+                        : AppColors.lightGrey,
                     borderRadius: BorderRadius.circular(2.r),
                   ),
                 ),
               ),
               Text(
                 widget.existingLog != null ? 'Edit Log' : 'New Meal',
-                style: AppTextStyles.heading1.copyWith(fontSize: 24.sp),
+                style: AppTextStyles.heading1.adaptive(context).copyWith(fontSize: 24.sp),
               ),
               SizedBox(height: 24.h),
 
@@ -275,7 +277,9 @@ class _AddFoodBottomSheetState extends ConsumerState<AddFoodBottomSheet> {
             label,
             style: AppTextStyles.caption.copyWith(
               fontWeight: FontWeight.w600,
-              color: AppColors.onBackground.withValues(alpha: 0.7),
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? AppColors.darkOnBackground.withValues(alpha: 0.7)
+                  : AppColors.onBackground.withValues(alpha: 0.7),
             ),
           ),
         ),
@@ -309,7 +313,7 @@ class _AddFoodBottomSheetState extends ConsumerState<AddFoodBottomSheet> {
               .map(
                 (type) => DropdownMenuItem(
                   value: type,
-                  child: Text(type, style: AppTextStyles.bodyText),
+                  child: Text(type, style: AppTextStyles.bodyText.adaptive(context)),
                 ),
               )
               .toList(),
@@ -329,7 +333,9 @@ class _AddFoodBottomSheetState extends ConsumerState<AddFoodBottomSheet> {
             'Date',
             style: AppTextStyles.caption.copyWith(
               fontWeight: FontWeight.w600,
-              color: AppColors.onBackground.withValues(alpha: 0.7),
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? AppColors.darkOnBackground.withValues(alpha: 0.7)
+                  : AppColors.onBackground.withValues(alpha: 0.7),
             ),
           ),
         ),
@@ -368,7 +374,9 @@ class _AddFoodBottomSheetState extends ConsumerState<AddFoodBottomSheet> {
             'Time',
             style: AppTextStyles.caption.copyWith(
               fontWeight: FontWeight.w600,
-              color: AppColors.onBackground.withValues(alpha: 0.7),
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? AppColors.darkOnBackground.withValues(alpha: 0.7)
+                  : AppColors.onBackground.withValues(alpha: 0.7),
             ),
           ),
         ),

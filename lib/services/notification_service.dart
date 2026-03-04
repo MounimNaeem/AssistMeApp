@@ -76,10 +76,19 @@ class NotificationService {
 
   /// Handle foreground messages - display as local notification
   void _handleForegroundMessage(RemoteMessage message) {
-    print('Foreground message: ${message.notification?.title}');
+    print('======================================');
+    print('Foreground message received!');
+    print('Title: ${message.notification?.title}');
+    print('Body: ${message.notification?.body}');
+    print('Data: ${message.data}');
+    print('Message ID: ${message.messageId}');
+    print('======================================');
 
     final notification = message.notification;
-    if (notification == null) return;
+    if (notification == null) {
+      print('Warning: Notification is null, only data payload received');
+      return;
+    }
 
     _localNotifications.show(
       notification.hashCode,
@@ -93,7 +102,11 @@ class NotificationService {
           priority: Priority.high,
           icon: '@mipmap/ic_launcher',
         ),
-        iOS: DarwinNotificationDetails(),
+        iOS: DarwinNotificationDetails(
+          presentAlert: true,
+          presentBadge: true,
+          presentSound: true,
+        ),
       ),
       payload: message.data.toString(),
     );
@@ -101,7 +114,12 @@ class NotificationService {
 
   /// Handle notification tap when app is in background/killed
   void _handleNotificationTap(RemoteMessage message) {
-    print('Notification tapped: ${message.data}');
+    print('======================================');
+    print('Notification tapped!');
+    print('Title: ${message.notification?.title}');
+    print('Body: ${message.notification?.body}');
+    print('Data: ${message.data}');
+    print('======================================');
     // TODO: Navigate to specific screen based on message.data
   }
 
@@ -116,40 +134,57 @@ class NotificationService {
     try {
       // On iOS, ensure APNS token is available before getting FCM token
       if (Platform.isIOS) {
-        final apnsToken = await _messaging.getAPNSToken();
+        String? apnsToken = await _messaging.getAPNSToken();
+
+        // Retry up to 5 times with increasing delays
+        int retryCount = 0;
+        while (apnsToken == null && retryCount < 5) {
+          print('APNS token not available yet, waiting... (attempt ${retryCount + 1}/5)');
+          await Future.delayed(Duration(seconds: 1 + retryCount));
+          apnsToken = await _messaging.getAPNSToken();
+          retryCount++;
+        }
+
         if (apnsToken == null) {
-          print('APNS token not available yet, waiting...');
-          // Wait a bit and retry
-          await Future.delayed(const Duration(seconds: 1));
-          final retryToken = await _messaging.getAPNSToken();
-          if (retryToken == null) {
-            print('APNS token still not available, FCM token retrieval may fail');
-          } else {
-            print('APNS token retrieved: $retryToken');
-          }
+          print('APNS token still not available after $retryCount attempts. Cannot retrieve FCM token.');
+          // Use token refresh listener as fallback
+          _setupTokenRefreshListener(userId);
+          return;
         } else {
           print('APNS token retrieved: $apnsToken');
         }
       }
 
       final token = await _messaging.getToken();
-      if (token == null) return;
+      if (token == null) {
+        print('FCM token is null, will retry on token refresh');
+        _setupTokenRefreshListener(userId);
+        return;
+      }
+
       await FirebaseFirestore.instance.collection('users').doc(userId).update({
         'fcmToken': token,
       });
 
-      print('FCM token saved for user: $userId  and toke is $token');
+      print('FCM token saved for user: $userId and token is $token');
 
       // Listen for token refresh
-      _messaging.onTokenRefresh.listen((newToken) {
-        FirebaseFirestore.instance.collection('users').doc(userId).update({
-          'fcmToken': newToken,
-        });
-        print('FCM token refreshed for user: $userId');
-      });
+      _setupTokenRefreshListener(userId);
     } catch (e) {
       print('Error saving FCM token: $e');
+      // Setup listener as fallback
+      _setupTokenRefreshListener(userId);
     }
+  }
+
+  /// Setup token refresh listener
+  void _setupTokenRefreshListener(String userId) {
+    _messaging.onTokenRefresh.listen((newToken) {
+      FirebaseFirestore.instance.collection('users').doc(userId).update({
+        'fcmToken': newToken,
+      });
+      print('FCM token refreshed and saved for user: $userId');
+    });
   }
 
   /// Clear FCM token from Firestore (call on logout)
@@ -168,7 +203,13 @@ class NotificationService {
 /// Background message handler - must be top-level function
 @pragma('vm:entry-point')
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  print('Background message: ${message.notification?.title}');
+  print('======================================');
+  print('Background message received!');
+  print('Title: ${message.notification?.title}');
+  print('Body: ${message.notification?.body}');
+  print('Data: ${message.data}');
+  print('Message ID: ${message.messageId}');
+  print('======================================');
   // Background messages are automatically displayed by FCM
   // No need to show local notification here
 }

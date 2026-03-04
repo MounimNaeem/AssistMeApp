@@ -32,9 +32,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     });
   }
 
-  void _saveFcmToken() {
+  void _saveFcmToken() async {
     final user = ref.read(authProvider).currentUser;
     if (user != null) {
+      // Add a small delay to give iOS time to register with APNS
+      await Future.delayed(const Duration(seconds: 1));
       NotificationService().saveTokenToFirestore(user.id);
     }
   }
