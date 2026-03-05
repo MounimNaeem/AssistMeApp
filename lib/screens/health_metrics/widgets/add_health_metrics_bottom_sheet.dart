@@ -153,7 +153,9 @@ class _AddHealthMetricsBottomSheetState extends ConsumerState<AddHealthMetricsBo
   Widget build(BuildContext context) {
     final isLoading = ref.watch(healthMetricsProvider).isLoading;
 
-    return Container(
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: Container(
         decoration: BoxDecoration(
           color: Theme.of(context).scaffoldBackgroundColor,
           borderRadius: BorderRadius.vertical(top: Radius.circular(32.r)),
@@ -164,13 +166,58 @@ class _AddHealthMetricsBottomSheetState extends ConsumerState<AddHealthMetricsBo
           top: 12.h,
           bottom: MediaQuery.of(context).viewInsets.bottom + 28.h,
         ),
-        child: SingleChildScrollView(
-          child: Form(
-            key: _formKey,
-            child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Keyboard toolbar with Done button
+            if (MediaQuery.of(context).viewInsets.bottom > 0)
+              Container(
+                width: double.infinity,
+                padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).brightness == Brightness.dark
+                      ? AppColors.darkCard
+                      : Colors.grey[200],
+                  border: Border(
+                    bottom: BorderSide(
+                      color: Theme.of(context).brightness == Brightness.dark
+                          ? AppColors.darkLightGrey
+                          : AppColors.lightGrey,
+                    ),
+                  ),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Entering numbers',
+                      style: AppTextStyles.caption.copyWith(
+                        color: Theme.of(context).brightness == Brightness.dark
+                            ? AppColors.darkGrey
+                            : AppColors.grey,
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: () => FocusScope.of(context).unfocus(),
+                      child: Text(
+                        'Done',
+                        style: AppTextStyles.bodyText.copyWith(
+                          color: AppColors.healthMetricsColor,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            Flexible(
+              child: SingleChildScrollView(
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
               Center(
                 child: Container(
                   width: 40.w,
@@ -199,6 +246,7 @@ class _AddHealthMetricsBottomSheetState extends ConsumerState<AddHealthMetricsBo
                       label: 'Weight (kg)',
                       hint: '75.5',
                       keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                      textInputAction: TextInputAction.done,
                       prefixIcon: const Icon(Icons.monitor_weight_rounded),
                       validator: _validateAtLeastOneField,
                     ),
@@ -210,6 +258,7 @@ class _AddHealthMetricsBottomSheetState extends ConsumerState<AddHealthMetricsBo
                       label: 'Height (cm)',
                       hint: '175',
                       keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                      textInputAction: TextInputAction.done,
                       prefixIcon: const Icon(Icons.height_rounded),
                     ),
                   ),
@@ -267,6 +316,7 @@ class _AddHealthMetricsBottomSheetState extends ConsumerState<AddHealthMetricsBo
                       label: 'Biceps (cm)',
                       hint: '38.5',
                       keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                      textInputAction: TextInputAction.done,
                       contentPadding: EdgeInsets.all(12.w),
                     ),
                   ),
@@ -277,6 +327,7 @@ class _AddHealthMetricsBottomSheetState extends ConsumerState<AddHealthMetricsBo
                       label: 'Waist (cm)',
                       hint: '82.0',
                       keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                      textInputAction: TextInputAction.done,
                       contentPadding: EdgeInsets.all(12.w),
                     ),
                   ),
@@ -292,6 +343,7 @@ class _AddHealthMetricsBottomSheetState extends ConsumerState<AddHealthMetricsBo
                       label: 'Body Fat (%)',
                       hint: '15.2',
                       keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                      textInputAction: TextInputAction.done,
                       contentPadding: EdgeInsets.all(12.w),
                     ),
                   ),
@@ -302,6 +354,7 @@ class _AddHealthMetricsBottomSheetState extends ConsumerState<AddHealthMetricsBo
                       label: 'Muscle Mass (kg)',
                       hint: '42.1',
                       keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                      textInputAction: TextInputAction.done,
                       contentPadding: EdgeInsets.all(12.w),
                     ),
                   ),
@@ -320,6 +373,7 @@ class _AddHealthMetricsBottomSheetState extends ConsumerState<AddHealthMetricsBo
                 label: 'Calorie Goal (kcal)',
                 hint: '2000',
                 keyboardType: TextInputType.number,
+                textInputAction: TextInputAction.done,
                 prefixIcon: const Icon(Icons.local_fire_department_rounded),
                 contentPadding: EdgeInsets.all(12.w),
               ),
@@ -338,6 +392,10 @@ class _AddHealthMetricsBottomSheetState extends ConsumerState<AddHealthMetricsBo
               ),
             ],
           ),
+        ),
+      ),
+    ),
+          ],
         ),
       ),
     );

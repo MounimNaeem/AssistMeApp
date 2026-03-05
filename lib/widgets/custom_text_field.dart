@@ -12,6 +12,7 @@ class CustomTextField extends StatelessWidget {
   final Widget? prefixIcon;
   final Widget? suffixIcon;
   final TextInputType keyboardType;
+  final TextInputAction? textInputAction;
   final String? Function(String?)? validator;
   final void Function(String)? onChanged;
   final EdgeInsetsGeometry? contentPadding;
@@ -28,6 +29,7 @@ class CustomTextField extends StatelessWidget {
     this.prefixIcon,
     this.suffixIcon,
     this.keyboardType = TextInputType.text,
+    this.textInputAction,
     this.validator,
     this.onChanged,
     this.contentPadding,
@@ -62,6 +64,7 @@ class CustomTextField extends StatelessWidget {
           controller: controller,
           obscureText: obscureText,
           keyboardType: keyboardType,
+          textInputAction: textInputAction,
           validator: validator,
           onChanged: onChanged,
           style: AppTextStyles.bodyText.adaptive(context),
